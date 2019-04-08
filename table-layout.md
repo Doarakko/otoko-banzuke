@@ -1,5 +1,5 @@
 # Table Layout
-## channel
+## channels
 |Name|Description|Type|Length|Deault|Foreign Key|
 |:--|:--|:--|:--|:--|:--|
 |id|channel id|varchar|256|||
@@ -8,7 +8,7 @@
 |create_date||string|256|||
 |update_date||string|256|||
 
-## video
+## videos
 |Name|Description|Type|Length|Deault|Foreign Key|
 |:--|:--|:--|:--|:--|:--|
 |id|video id|varchar|256|||
@@ -16,7 +16,7 @@
 |create_date||string|256|||
 |update_date||string|256|||
 
-## comment
+## comments
 |Name|Description|Type|Length|Deault|Foreign Key|
 |:--|:--|:--|:--|:--|:--|
 |id|comment id|varchar|256|||
