@@ -1,6 +1,6 @@
 CREATE TABLE comments
 (
-    id text,
+    comment_id text,
     text_display text NOT NULL,
     author_id text NOT NULL,
     author_name text NOT NULL,
@@ -10,8 +10,7 @@ CREATE TABLE comments
     parent_id text,
     like_count int DEFAULT 0 NOT NULL,
     reply_count int DEFAULT 0 NOT NULL,
-    create_date TIMESTAMP DEFAULT now() NOT NULL,
-    update_date TIMESTAMP DEFAULT now() NOT NULL,
-    PRIMARY KEY (id)
+    created_at TIMESTAMP DEFAULT now() NOT NULL,
+    updated_at TIMESTAMP DEFAULT now() NOT NULL,
+    PRIMARY KEY (comment_id)
 );
-

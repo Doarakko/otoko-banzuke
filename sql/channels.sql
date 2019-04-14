@@ -1,6 +1,6 @@
 CREATE TABLE channels
 (
-    id text,
+    channel_id text,
     name text NOT NULL,
     description text,
     thumbnail_url text NOT NULL,
@@ -9,8 +9,8 @@ CREATE TABLE channels
     video_count int DEFAULT 0 NOT NULL,
     -- comment_count int DEFAULT 0 NOT NULL,
     subscriber_count int DEFAULT 0 NOT NULL,
-    create_date TIMESTAMP DEFAULT now() NOT NULL,
-    update_date TIMESTAMP DEFAULT now() NOT NULL,
-    PRIMARY KEY (id)
+    created_at TIMESTAMP DEFAULT now() NOT NULL,
+    updated_at TIMESTAMP DEFAULT now() NOT NULL,
+    PRIMARY KEY (channel_id)
 );
 
