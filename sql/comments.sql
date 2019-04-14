@@ -1,4 +1,5 @@
-CREATE TABLE comments (
+CREATE TABLE comments
+(
     id text,
     text_display text NOT NULL,
     author_id text NOT NULL,
