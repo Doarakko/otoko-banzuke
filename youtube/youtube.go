@@ -3,16 +3,17 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/joho/godotenv"
 	"google.golang.org/api/googleapi/transport"
 	"google.golang.org/api/youtube/v3"
 )
 
 func newGormConnect() *gorm.DB {
-	//db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
-	db, err := gorm.Open("postgres", "postgres://uojcpxxbqfdtwe:32aaebe5b808ffc63f7753a98f16000479469eb57e7a85eed218feb2e0436463@ec2-23-23-173-30.compute-1.amazonaws.com:5432/d16518rirmmbsl")
+	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
 
 	if err != nil {
 		panic(err.Error())
@@ -22,7 +23,7 @@ func newGormConnect() *gorm.DB {
 
 func newYoutubeService() *youtube.Service {
 	client := &http.Client{
-		Transport: &transport.APIKey{Key: "AIzaSyD3BcAAS4dmpvUbVrT8K3U49d6PYxR8CTk"},
+		Transport: &transport.APIKey{Key: os.Getenv("YOTUBE_API_KEY")},
 	}
 
 	service, err := youtube.New(client)
@@ -34,10 +35,18 @@ func newYoutubeService() *youtube.Service {
 }
 
 func main() {
-	channel := channel{}
-	channel.ChannelID = "UCZFxcWJS1_iVIFETARRRHZQ"
-	//insertChannel(getChannelInfo(channelID))
-	channel = channel.selectChannel()
-	print(channel.PlaylistID)
-	//insertVideos(getAllVideos(channel.PlaylistID, ""))
+	err := godotenv.Load("../.env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	channel := channel{ChannelID: "UCxbY38ReXW3LbaviWUE4omg"}
+
+	for _, video := range channel.selectVideos() {
+		for _, comment := range video.getComments() {
+			if comment.checkOtoko() {
+				println(comment.TextDisplay)
+			}
+		}
+	}
 }
