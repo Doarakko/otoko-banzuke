@@ -1,4 +1,4 @@
-package main
+package youtube
 
 import (
 	"log"
@@ -6,7 +6,8 @@ import (
 	"time"
 )
 
-type comment struct {
+// Comment gaerg
+type Comment struct {
 	CommentID   string
 	TextDisplay string
 	AuthorID    string
@@ -31,7 +32,7 @@ var res = []*regexp.Regexp{
 	regexp.MustCompile("^.+オンナ.{0,1}$"),
 }
 
-func (c *comment) insertComment() {
+func (c *Comment) insertComment() {
 	db := newGormConnect()
 	defer db.Close()
 
@@ -39,11 +40,22 @@ func (c *comment) insertComment() {
 	log.Printf("Insert comment: %v\n", c)
 }
 
-func (c *comment) checkOtoko() bool {
+func (c *Comment) checkOtoko() bool {
 	for _, re := range res {
 		if re.MatchString(c.TextDisplay) {
 			return true
 		}
 	}
 	return false
+}
+
+// SelectAllComments get comments
+func SelectAllComments() []Comment {
+	db := newGormConnect()
+	defer db.Close()
+
+	comments := []Comment{}
+	db.Find(&comments)
+
+	return comments
 }

@@ -1,4 +1,4 @@
-package main
+package youtube
 
 import (
 	"log"
@@ -26,6 +26,10 @@ func (v *video) insertVideo() {
 
 	db.Create(&v)
 	log.Printf("Insert video: %v\n", v)
+}
+
+func (v *video) deleteVideo() {
+
 }
 
 func (v *video) getVideoInfo() video {
@@ -68,7 +72,7 @@ func (v *video) getVideoInfo() video {
 	return *v
 }
 
-func (v *video) getComments() []comment {
+func (v *video) getComments() []Comment {
 	service := newYoutubeService()
 	call := service.CommentThreads.List("snippet").
 		VideoId(v.VideoID).
@@ -79,7 +83,7 @@ func (v *video) getComments() []comment {
 		log.Fatalf("%v", err)
 	}
 
-	comments := []comment{}
+	comments := []Comment{}
 	for _, item := range response.Items {
 		commentid := item.Snippet.TopLevelComment.Id
 		authorName := item.Snippet.TopLevelComment.Snippet.AuthorDisplayName
@@ -90,7 +94,7 @@ func (v *video) getComments() []comment {
 		channelID := item.Snippet.ChannelId
 		videoID := item.Snippet.VideoId
 
-		comment := comment{
+		comment := Comment{
 			CommentID:   commentid,
 			VideoID:     videoID,
 			ChannelID:   channelID,
