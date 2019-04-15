@@ -36,7 +36,17 @@ func (c *channel) insertChannel() {
 	log.Printf("Insert channel: %v\n", c)
 }
 
-func (c *channel) deleteVideo() {
+func (c *channel) selectVideos() []video {
+	db := newGormConnect()
+	defer db.Close()
+
+	videos := []video{}
+	db.Find(&videos, "channel_id=?", c.ChannelID)
+
+	return videos
+}
+
+func (c *channel) deleteVideos() {
 
 }
 
