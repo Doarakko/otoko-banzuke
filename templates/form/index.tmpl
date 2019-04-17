@@ -1,0 +1,22 @@
+{{ define "form/index.tmpl" }}
+<html>
+    <head>
+        <title>漢サーチ</title>
+        <link rel="stylesheet" type="text/css" href="public/style.css">
+        <link rel="shortcut icon" href="public/favicon.ico">
+    </head>
+    <body>
+        <h1>漢サーチ：情報提供</h1>
+        
+        <form method="post" action="/form">
+            <input name="query" type="text">
+            <input type="submit" value="検索"></p>
+        </form>
+        <ul>
+            {{range .channels}}
+                <li>{{.Name}} {{.Description}}</li>
+            {{end}}
+        </ul>
+    </body>
+</html>
+{{end}}
