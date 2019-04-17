@@ -38,7 +38,12 @@ func main() {
 
 	router.POST("/form", func(c *gin.Context) {
 		query := c.PostForm("query")
-		channels = youtube.SearchChannel(query)
+		channels = youtube.SearchChannels(query)
+
+		for i := range channels {
+			channels[i].SetDetailInfo()
+		}
+
 		c.Redirect(302, "/form")
 	})
 
