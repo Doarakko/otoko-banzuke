@@ -32,12 +32,24 @@ var res = []*regexp.Regexp{
 	regexp.MustCompile("^.+オンナ.{0,1}$"),
 }
 
-func (c *Comment) insertComment() {
+func (c *Comment) insert() {
 	db := newGormConnect()
 	defer db.Close()
 
 	db.Create(&c)
 	log.Printf("Insert comment: %v\n", c)
+}
+
+func (c *Comment) update() {
+
+}
+
+func (c *Comment) delete() {
+
+}
+
+func (c *Comment) getCommentInfo() Comment {
+	return *c
 }
 
 func (c *Comment) checkOtoko() bool {
