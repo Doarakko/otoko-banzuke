@@ -5,7 +5,8 @@ import (
 	"time"
 )
 
-type channel struct {
+// Channel fa
+type Channel struct {
 	ChannelID    string
 	Name         string
 	Description  string
@@ -19,7 +20,7 @@ type channel struct {
 	UpdatedAt       time.Time
 }
 
-func (c *channel) selectChannel() channel {
+func (c *Channel) selectChannel() Channel {
 	db := newGormConnect()
 	defer db.Close()
 
@@ -28,7 +29,7 @@ func (c *channel) selectChannel() channel {
 	return *c
 }
 
-func (c *channel) insertChannel() {
+func (c *Channel) insertChannel() {
 	db := newGormConnect()
 	defer db.Close()
 
@@ -36,21 +37,21 @@ func (c *channel) insertChannel() {
 	log.Printf("Insert channel: %v\n", c)
 }
 
-func (c *channel) selectVideos() []video {
+func (c *Channel) selectVideos() []Video {
 	db := newGormConnect()
 	defer db.Close()
 
-	videos := []video{}
+	videos := []Video{}
 	db.Find(&videos, "channel_id=?", c.ChannelID)
 
 	return videos
 }
 
-func (c *channel) deleteVideos() {
+func (c *Channel) deleteVideos() {
 
 }
 
-func (c *channel) getChannelInfo() channel {
+func (c *Channel) getChannelInfo() Channel {
 	service := newYoutubeService()
 	call := service.Channels.List("snippet,contentDetails,statistics").
 		Id(c.ChannelID).
@@ -69,7 +70,7 @@ func (c *channel) getChannelInfo() channel {
 	videoCount := int32(item.Statistics.VideoCount)
 	// commentCount := item.Statistics.CommentCount
 
-	*c = channel{
+	*c = Channel{
 		Name:            name,
 		Description:     description,
 		ThumbnailURL:    thumbnailURL,
@@ -82,7 +83,7 @@ func (c *channel) getChannelInfo() channel {
 }
 
 // TODO 日付指定
-func (c *channel) getNewVideos() []video {
+func (c *Channel) getNewVideos() []Video {
 	service := newYoutubeService()
 	call := service.Search.List("id").
 		Type("video").
@@ -94,7 +95,7 @@ func (c *channel) getNewVideos() []video {
 		log.Fatalf("%v", err)
 	}
 
-	videos := []video{}
+	videos := []Video{}
 	for _, item := range response.Items {
 		videoID := item.Id.VideoId
 		title := item.Snippet.Title
@@ -106,7 +107,7 @@ func (c *channel) getNewVideos() []video {
 			log.Fatalf("%v", err)
 		}
 
-		video := video{
+		video := Video{
 			VideoID:      videoID,
 			Title:        title,
 			Description:  description,
@@ -121,7 +122,7 @@ func (c *channel) getNewVideos() []video {
 	return videos
 }
 
-func getAllVideos(playlistID string, pageToken string) []video {
+func getAllVideos(playlistID string, pageToken string) []Video {
 	service := newYoutubeService()
 	call := service.PlaylistItems.List("id,snippet,contentDetails").
 		PlaylistId(playlistID).
@@ -132,7 +133,7 @@ func getAllVideos(playlistID string, pageToken string) []video {
 		log.Fatalf("%v", err)
 	}
 
-	videos := []video{}
+	videos := []Video{}
 	for _, item := range response.Items {
 		videoID := item.ContentDetails.VideoId
 		title := item.Snippet.Title
@@ -144,7 +145,7 @@ func getAllVideos(playlistID string, pageToken string) []video {
 			log.Fatalf("%v", err)
 		}
 
-		video := video{
+		video := Video{
 			VideoID:      videoID,
 			Title:        title,
 			Description:  description,
@@ -167,4 +168,37 @@ func getAllVideos(playlistID string, pageToken string) []video {
 
 func getHighRatedVideos(playlistID string, pageToken string) {
 
+}
+
+// SearchChannel hoge
+func SearchChannel(q string) []Channel {
+	service := newYoutubeService()
+	call := service.Search.List("id,snippet").
+		Type("channel").
+		Q(q).
+		Order("relevance").
+		MaxResults(10)
+	response, err := call.Do()
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+
+	channels := []Channel{}
+	for _, item := range response.Items {
+		channelID := item.Id.ChannelId
+		title := item.Snippet.Title
+		description := item.Snippet.Description
+		thumbnailURL := item.Snippet.Thumbnails.High.Url
+
+		channel := Channel{
+			Description:  description,
+			ThumbnailURL: thumbnailURL,
+			Name:         title,
+			ChannelID:    channelID,
+		}
+		channels = append(channels, channel)
+	}
+	log.Printf("Get %v channel\n", len(channels))
+
+	return channels
 }
