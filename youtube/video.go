@@ -5,7 +5,8 @@ import (
 	"time"
 )
 
-type video struct {
+// Video gare
+type Video struct {
 	VideoID      string
 	Title        string
 	Description  string
@@ -20,7 +21,7 @@ type video struct {
 	UpdatedAt    time.Time
 }
 
-func (v *video) insertVideo() {
+func (v *Video) insertVideo() {
 	db := newGormConnect()
 	defer db.Close()
 
@@ -28,11 +29,11 @@ func (v *video) insertVideo() {
 	log.Printf("Insert video: %v\n", v)
 }
 
-func (v *video) deleteVideo() {
+func (v *Video) deleteVideo() {
 
 }
 
-func (v *video) getVideoInfo() video {
+func (v *Video) getVideoInfo() Video {
 	service := newYoutubeService()
 	call := service.Videos.List("id,snippet,Statistics").
 		Id(v.VideoID).
@@ -57,7 +58,7 @@ func (v *video) getVideoInfo() video {
 		log.Fatalf("%v", err)
 	}
 
-	*v = video{
+	*v = Video{
 		Title:        title,
 		Description:  description,
 		ThumbnailURL: thumbnailURL,
@@ -72,7 +73,7 @@ func (v *video) getVideoInfo() video {
 	return *v
 }
 
-func (v *video) getComments() []Comment {
+func (v *Video) getComments() []Comment {
 	service := newYoutubeService()
 	call := service.CommentThreads.List("snippet").
 		VideoId(v.VideoID).
