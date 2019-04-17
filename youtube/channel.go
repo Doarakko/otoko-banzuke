@@ -29,7 +29,7 @@ func (c *Channel) selectChannel() Channel {
 	return *c
 }
 
-func (c *Channel) insertChannel() {
+func (c *Channel) insert() {
 	db := newGormConnect()
 	defer db.Close()
 
@@ -51,7 +51,8 @@ func (c *Channel) deleteVideos() {
 
 }
 
-func (c *Channel) getChannelInfo() Channel {
+// SetDetailInfo hoge
+func (c *Channel) SetDetailInfo() {
 	service := newYoutubeService()
 	call := service.Channels.List("snippet,contentDetails,statistics").
 		Id(c.ChannelID).
@@ -61,25 +62,15 @@ func (c *Channel) getChannelInfo() Channel {
 		log.Fatalf("%v", err)
 	}
 	item := response.Items[0]
-	name := item.Snippet.Title
-	description := item.Snippet.Description
-	thumbnailURL := item.Snippet.Thumbnails.High.Url
-	playlistID := item.ContentDetails.RelatedPlaylists.Uploads
-	viewCount := int64(item.Statistics.ViewCount)
-	subscriberCount := int32(item.Statistics.SubscriberCount)
-	videoCount := int32(item.Statistics.VideoCount)
-	// commentCount := item.Statistics.CommentCount
 
-	*c = Channel{
-		Name:            name,
-		Description:     description,
-		ThumbnailURL:    thumbnailURL,
-		PlaylistID:      playlistID,
-		ViewCount:       viewCount,
-		VideoCount:      videoCount,
-		SubscriberCount: subscriberCount,
-	}
-	return *c
+	c.Name = item.Snippet.Title
+	c.Description = item.Snippet.Description
+	c.ThumbnailURL = item.Snippet.Thumbnails.High.Url
+	c.PlaylistID = item.ContentDetails.RelatedPlaylists.Uploads
+	c.ViewCount = int64(item.Statistics.ViewCount)
+	c.SubscriberCount = int32(item.Statistics.SubscriberCount)
+	c.VideoCount = int32(item.Statistics.VideoCount)
+	// commentCount := item.Statistics.CommentCount
 }
 
 // TODO 日付指定
@@ -170,8 +161,8 @@ func getHighRatedVideos(playlistID string, pageToken string) {
 
 }
 
-// SearchChannel hoge
-func SearchChannel(q string) []Channel {
+// SearchChannels hoge
+func SearchChannels(q string) []Channel {
 	service := newYoutubeService()
 	call := service.Search.List("id,snippet").
 		Type("channel").
@@ -191,14 +182,14 @@ func SearchChannel(q string) []Channel {
 		thumbnailURL := item.Snippet.Thumbnails.High.Url
 
 		channel := Channel{
+			ChannelID:    channelID,
+			Name:         title,
 			Description:  description,
 			ThumbnailURL: thumbnailURL,
-			Name:         title,
-			ChannelID:    channelID,
 		}
 		channels = append(channels, channel)
 	}
-	log.Printf("Get %v channel\n", len(channels))
+	log.Printf("Get %v channels\n", len(channels))
 
 	return channels
 }
