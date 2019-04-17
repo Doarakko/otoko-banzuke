@@ -33,7 +33,8 @@ func (v *Video) deleteVideo() {
 
 }
 
-func (v *Video) getVideoInfo() Video {
+// SetDetailInfo hoge
+func (v *Video) SetDetailInfo() {
 	service := newYoutubeService()
 	call := service.Videos.List("id,snippet,Statistics").
 		Id(v.VideoID).
@@ -42,35 +43,20 @@ func (v *Video) getVideoInfo() Video {
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
-
 	item := response.Items[0]
 
-	title := item.Snippet.Title
-	description := item.Snippet.Description
-	thumbnailURL := item.Snippet.Thumbnails.High.Url
-	viewCount := int64(item.Statistics.ViewCount)
-	commentCount := int32(item.Statistics.CommentCount)
-	likeCount := int32(item.Statistics.LikeCount)
-	dislikeCount := int32(item.Statistics.DislikeCount)
-	channelID := item.Snippet.ChannelId
-	publishedAt, err := time.Parse(time.RFC3339, item.Snippet.PublishedAt)
+	v.Title = item.Snippet.Title
+	v.Description = item.Snippet.Description
+	v.ThumbnailURL = item.Snippet.Thumbnails.High.Url
+	v.ViewCount = int64(item.Statistics.ViewCount)
+	v.CommentCount = int32(item.Statistics.CommentCount)
+	v.LikeCount = int32(item.Statistics.LikeCount)
+	v.DislikeCount = int32(item.Statistics.DislikeCount)
+	v.ChannelID = item.Snippet.ChannelId
+	v.PublishedAt, err = time.Parse(time.RFC3339, item.Snippet.PublishedAt)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
-
-	*v = Video{
-		Title:        title,
-		Description:  description,
-		ThumbnailURL: thumbnailURL,
-		ViewCount:    viewCount,
-		LikeCount:    likeCount,
-		DislikeCount: dislikeCount,
-		CommentCount: commentCount,
-		ChannelID:    channelID,
-		PublishedAt:  publishedAt,
-	}
-
-	return *v
 }
 
 func (v *Video) getComments() []Comment {
