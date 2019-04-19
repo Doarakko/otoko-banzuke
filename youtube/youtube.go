@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"google.golang.org/api/googleapi/transport"
 	"google.golang.org/api/youtube/v3"
 )
@@ -35,13 +34,14 @@ func newYoutubeService() *youtube.Service {
 
 func main() {
 
-	channel := channel{ChannelID: "UCxbY38ReXW3LbaviWUE4omg"}
+	channel := Channel{ChannelID: "UCxbY38ReXW3LbaviWUE4omg"}
 
 	for _, video := range channel.selectVideos() {
 		for _, comment := range video.getComments() {
 			if comment.checkOtoko() {
-				comment.insertComment()
+				comment.insert()
 			}
 		}
 	}
+
 }
