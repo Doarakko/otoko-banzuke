@@ -14,6 +14,5 @@
 .env
 
 # 
-youtube/youtube
-youtube/main
+pkg/youtube/youtube
 main
