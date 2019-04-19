@@ -29,12 +29,20 @@ func (c *Channel) selectChannel() Channel {
 	return *c
 }
 
-func (c *Channel) insert() {
+func (c *Channel) Insert() {
 	db := newGormConnect()
 	defer db.Close()
 
 	db.Create(&c)
 	log.Printf("Insert channel: %v\n", c)
+}
+
+func (c *Channel) update() {
+
+}
+
+func (c *Channel) delete() {
+
 }
 
 func (c *Channel) selectVideos() []Video {
