@@ -8,18 +8,19 @@ import (
 
 // Comment gaerg
 type Comment struct {
-	CommentID   string
-	TextDisplay string
-	AuthorID    string
-	AuthorName  string
-	AuthorURL   string
-	ChannelID   string
-	VideoID     string
-	ParentID    string
-	LikeCount   int32
-	ReplyCount  int32
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	CommentID    string
+	TextDisplay  string
+	AuthorID     string
+	AuthorName   string
+	AuthorURL    string
+	ChannelID    string
+	VideoID      string
+	ThumbnailURL string
+	ParentID     string
+	LikeCount    int32
+	ReplyCount   int32
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
 
 var res = []*regexp.Regexp{
