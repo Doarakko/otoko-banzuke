@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"./youtube"
+	myyoutube "./youtube"
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/joho/godotenv"
@@ -17,7 +17,7 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	comments := youtube.SelectAllComments()
+	comments := myyoutube.SelectAllComments()
 
 	router := gin.Default()
 	router.Static("/public", "./public")
@@ -29,7 +29,7 @@ func main() {
 		})
 	})
 
-	channels := []youtube.Channel{}
+	channels := []myyoutube.Channel{}
 	router.GET("/form", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "form/index.tmpl", gin.H{
 			"channels": channels,
@@ -38,12 +38,20 @@ func main() {
 
 	router.POST("/form", func(c *gin.Context) {
 		query := c.PostForm("query")
-		channels = youtube.SearchChannels(query)
+		channelID := c.PostForm("channel_id")
 
-		for i := range channels {
-			channels[i].SetDetailInfo()
+		if query != "" {
+			channels = myyoutube.SearchChannels(query)
+			for i := range channels {
+				channels[i].SetDetailInfo()
+			}
+		} else {
+			channel := myyoutube.Channel{
+				ChannelID: channelID,
+			}
+			channel.SetDetailInfo()
+			channel.Insert()
 		}
-
 		c.Redirect(302, "/form")
 	})
 
