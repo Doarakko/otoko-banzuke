@@ -12,8 +12,6 @@ type Video struct {
 	Description  string
 	ThumbnailURL string
 	ViewCount    int64
-	LikeCount    int32
-	DislikeCount int32
 	CommentCount int32
 	ChannelID    string
 	PublishedAt  time.Time
@@ -50,8 +48,6 @@ func (v *Video) SetDetailInfo() {
 	v.ThumbnailURL = item.Snippet.Thumbnails.High.Url
 	v.ViewCount = int64(item.Statistics.ViewCount)
 	v.CommentCount = int32(item.Statistics.CommentCount)
-	v.LikeCount = int32(item.Statistics.LikeCount)
-	v.DislikeCount = int32(item.Statistics.DislikeCount)
 	v.ChannelID = item.Snippet.ChannelId
 	v.PublishedAt, err = time.Parse(time.RFC3339, item.Snippet.PublishedAt)
 	if err != nil {

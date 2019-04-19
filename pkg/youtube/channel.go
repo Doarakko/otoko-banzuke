@@ -7,14 +7,13 @@ import (
 
 // Channel fa
 type Channel struct {
-	ChannelID    string
-	Name         string
-	Description  string
-	ThumbnailURL string
-	PlaylistID   string
-	ViewCount    int64
-	VideoCount   int32
-	// CommentCount    int32
+	ChannelID       string
+	Name            string
+	Description     string
+	ThumbnailURL    string
+	PlaylistID      string
+	ViewCount       int64
+	VideoCount      int32
 	SubscriberCount int32
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
@@ -29,6 +28,7 @@ func (c *Channel) selectChannel() Channel {
 	return *c
 }
 
+// Insert hoge
 func (c *Channel) Insert() {
 	db := newGormConnect()
 	defer db.Close()

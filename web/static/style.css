@@ -1,6 +1,6 @@
 @font-face {
 	font-family: 'MyFont';
-    src: url(/public/KouzanMouhituFontOTF.otf);    
+    src: url(/web/static/KouzanMouhituFontOTF.otf);    
 }
 
 body {

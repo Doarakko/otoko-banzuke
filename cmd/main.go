@@ -4,7 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	myyoutube "./youtube"
+	myyoutube "../pkg/youtube"
+
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/joho/godotenv"
@@ -12,7 +13,7 @@ import (
 
 func main() {
 
-	err := godotenv.Load(".env")
+	err := godotenv.Load("../.env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
@@ -20,8 +21,8 @@ func main() {
 	comments := myyoutube.SelectAllComments()
 
 	router := gin.Default()
-	router.Static("/public", "./public")
-	router.LoadHTMLFiles("templates/index.tmpl", "templates/form/index.tmpl")
+	router.Static("/web/static", "../web/static")
+	router.LoadHTMLFiles("../web/template/index.tmpl", "../web/template/form/index.tmpl")
 
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{
