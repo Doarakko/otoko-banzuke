@@ -11,3 +11,9 @@
 - Heroku
 
 ## Usage
+
+## License
+MIT
+
+## Author
+Doarakko
