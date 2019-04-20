@@ -1,11 +1,25 @@
 {
-  "name": "Otoko Search",
+  "name": "漢番付",
   "description": "Otoko Search",
   "keywords": [
-    "otoko-search",
-    "漢サーチ"
+    "漢番付",
+    "YouTube",
+    "ユーチューブ"
   ],
-  "website": "http://github.com/heroku/otoko-search",
-  "repository": "http://github.com/heroku/otoko-search"
+  "website": "http://github.com/heroku/otoko-banzuke",
+  "repository": "http://github.com/heroku/otoko-banzuke",
+  "env": {
+    "YOUTUBE_API_KEY": {
+      "description": "hoge",
+      "value": "your key"
+    },
+    "DATABASE_URL": {
+      "description": "Postgres",
+      "value": "hoge"
+    },
+  },
+  "addons": [
+    "scheduler:standard",
+    "heroku-postgresql"
+  ]
 }
-
