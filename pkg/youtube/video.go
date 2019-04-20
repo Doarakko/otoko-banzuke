@@ -7,16 +7,18 @@ import (
 
 // Video gare
 type Video struct {
-	VideoID      string
-	Title        string
-	Description  string
-	ThumbnailURL string
-	ViewCount    int64
-	CommentCount int32
-	ChannelID    string
-	PublishedAt  time.Time
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
+	VideoID      string    `gorm:"column:video_id"`
+	Title        string    `gorm:"column:title"`
+	Description  string    `gorm:"column:description"`
+	ThumbnailURL string    `gorm:"column:thumbnail_url"`
+	ViewCount    int64     `gorm:"column:view_count"`
+	CommentCount int32     `gorm:"column:comment_count"`
+	PublishedAt  time.Time `gorm:"column:published_at"`
+	CategoryID   string    `gorm:"column:category_id"`
+	CategoryName string    `gorm:"column:category_name"`
+	ChannelID    string    `gorm:"column:channel_id"`
+	CreatedAt    time.Time `gorm:"column:created_at"`
+	UpdatedAt    time.Time `gorm:"column:updated_at"`
 }
 
 func (v *Video) insertVideo() {
@@ -49,16 +51,32 @@ func (v *Video) SetDetailInfo() {
 	v.ViewCount = int64(item.Statistics.ViewCount)
 	v.CommentCount = int32(item.Statistics.CommentCount)
 	v.ChannelID = item.Snippet.ChannelId
+	v.CategoryID = item.Snippet.CategoryId
+	v.setCategoryName()
 	v.PublishedAt, err = time.Parse(time.RFC3339, item.Snippet.PublishedAt)
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
 }
 
+func (v *Video) setCategoryName() {
+	service := newYoutubeService()
+	call := service.VideoCategories.List("id,snippet").
+		Id(v.CategoryID)
+	response, err := call.Do()
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+
+	item := response.Items[0]
+	v.CategoryName = item.Snippet.Title
+}
+
 func (v *Video) getComments() []Comment {
 	service := newYoutubeService()
 	call := service.CommentThreads.List("snippet").
 		VideoId(v.VideoID).
+		TextFormat("plainText").
 		Order("relevance").
 		MaxResults(50)
 	response, err := call.Do()
@@ -68,7 +86,7 @@ func (v *Video) getComments() []Comment {
 
 	comments := []Comment{}
 	for _, item := range response.Items {
-		commentid := item.Snippet.TopLevelComment.Id
+		commentID := item.Snippet.TopLevelComment.Id
 		authorName := item.Snippet.TopLevelComment.Snippet.AuthorDisplayName
 		authorURL := item.Snippet.TopLevelComment.Snippet.AuthorChannelUrl
 		textDisplay := item.Snippet.TopLevelComment.Snippet.TextDisplay
@@ -78,7 +96,7 @@ func (v *Video) getComments() []Comment {
 		videoID := item.Snippet.VideoId
 
 		comment := Comment{
-			CommentID:   commentid,
+			CommentID:   commentID,
 			VideoID:     videoID,
 			ChannelID:   channelID,
 			TextDisplay: textDisplay,
