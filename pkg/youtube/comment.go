@@ -8,19 +8,16 @@ import (
 
 // Comment gaerg
 type Comment struct {
-	CommentID    string
-	TextDisplay  string
-	AuthorID     string
-	AuthorName   string
-	AuthorURL    string
-	ChannelID    string
-	VideoID      string
-	ThumbnailURL string
-	ParentID     string
-	LikeCount    int32
-	ReplyCount   int32
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
+	CommentID   string    `gorm:"column:comment_id"`
+	TextDisplay string    `gorm:"column:text_display"`
+	AuthorName  string    `gorm:"column:author_name"`
+	AuthorURL   string    `gorm:"column:author_url"`
+	LikeCount   int32     `gorm:"column:like_count"`
+	ReplyCount  int32     `gorm:"column:reply_count"`
+	ChannelID   string    `gorm:"column:channel_id"`
+	VideoID     string    `gorm:"column:video_id"`
+	CreatedAt   time.Time `gorm:"column:created_at"`
+	UpdatedAt   time.Time `gorm:"column:updated_at"`
 }
 
 var res = []*regexp.Regexp{
