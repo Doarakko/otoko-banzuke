@@ -1,1 +1,1 @@
-web: bin/otoko-search
+web: bin/otoko-banzuke
