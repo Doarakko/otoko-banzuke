@@ -7,16 +7,16 @@ import (
 
 // Channel fa
 type Channel struct {
-	ChannelID       string
-	Name            string
-	Description     string
-	ThumbnailURL    string
-	PlaylistID      string
-	ViewCount       int64
-	VideoCount      int32
-	SubscriberCount int32
-	CreatedAt       time.Time
-	UpdatedAt       time.Time
+	ChannelID       string    `gorm:"column:channel_id"`
+	Name            string    `gorm:"column:name"`
+	Description     string    `gorm:"column:description"`
+	ThumbnailURL    string    `gorm:"column:thumbnail_url"`
+	PlaylistID      string    `gorm:"column:playlist_id"`
+	ViewCount       int64     `gorm:"column:view_count"`
+	VideoCount      int32     `gorm:"column:video_count"`
+	SubscriberCount int32     `gorm:"column:subscriber_count"`
+	CreatedAt       time.Time `gorm:"column:created_at"`
+	UpdatedAt       time.Time `gorm:"column:updated_at"`
 }
 
 func (c *Channel) selectChannel() Channel {
