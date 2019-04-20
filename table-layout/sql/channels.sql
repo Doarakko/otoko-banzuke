@@ -1,13 +1,13 @@
 CREATE TABLE channels
 (
-    channel_id text,
+    channel_id text NOT NULL,
     name text NOT NULL,
-    description text,
+    description text NOT NULL,
     thumbnail_url text NOT NULL,
-    playlist_id text NOT NULL,
-    view_count int DEFAULT 0 NOT NULL,
-    video_count int DEFAULT 0 NOT NULL,
-    subscriber_count int DEFAULT 0 NOT NULL,
+    playlist_id text,
+    view_count int DEFAULT 0,
+    video_count int DEFAULT 0,
+    subscriber_count int DEFAULT 0,
     created_at TIMESTAMP DEFAULT now() NOT NULL,
     updated_at TIMESTAMP DEFAULT now() NOT NULL,
     PRIMARY KEY (channel_id)
