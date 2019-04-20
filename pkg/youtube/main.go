@@ -21,7 +21,7 @@ func newGormConnect() *gorm.DB {
 
 func newYoutubeService() *youtube.Service {
 	client := &http.Client{
-		Transport: &transport.APIKey{Key: os.Getenv("YOTUBE_API_KEY")},
+		Transport: &transport.APIKey{Key: os.Getenv("YOUTUBE_API_KEY")},
 	}
 
 	service, err := youtube.New(client)
