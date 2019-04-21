@@ -93,13 +93,11 @@ func (v *Video) GetComments() []Comment {
 		textDisplay := item.Snippet.TopLevelComment.Snippet.TextDisplay
 		likeCount := int32(item.Snippet.TopLevelComment.Snippet.LikeCount)
 		replyCount := int32(item.Snippet.TotalReplyCount)
-		channelID := item.Snippet.ChannelId
-		videoID := item.Snippet.VideoId
 
 		comment := Comment{
 			CommentID:   commentID,
-			VideoID:     videoID,
-			ChannelID:   channelID,
+			VideoID:     v.VideoID,
+			ChannelID:   v.ChannelID,
 			TextDisplay: textDisplay,
 			AuthorName:  authorName,
 			AuthorURL:   authorURL,
