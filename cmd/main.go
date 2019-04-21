@@ -22,7 +22,7 @@ func main() {
 
 	router := gin.Default()
 	router.Static("/web/static", "../web/static")
-	router.LoadHTMLFiles("../web/template/index.tmpl", "../web/template/form/index.tmpl")
+	router.LoadHTMLFiles("../web/template/index.tmpl", "../web/template/commend/index.tmpl")
 
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{
@@ -31,13 +31,13 @@ func main() {
 	})
 
 	channels := []myyoutube.Channel{}
-	router.GET("/form", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "form/index.tmpl", gin.H{
+	router.GET("/commend", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "commend/index.tmpl", gin.H{
 			"channels": channels,
 		})
 	})
 
-	router.POST("/form", func(c *gin.Context) {
+	router.POST("/commend", func(c *gin.Context) {
 		query := c.PostForm("query")
 		channelID := c.PostForm("channel_id")
 
@@ -53,7 +53,7 @@ func main() {
 			channel.SetDetailInfo()
 			channel.Insert()
 		}
-		c.Redirect(302, "/form")
+		c.Redirect(302, "/commend")
 	})
 
 	router.Run(":8080")
