@@ -31,17 +31,3 @@ func newYoutubeService() *youtube.Service {
 
 	return service
 }
-
-func main() {
-
-	channel := Channel{ChannelID: "UCxbY38ReXW3LbaviWUE4omg"}
-
-	for _, video := range channel.selectVideos() {
-		for _, comment := range video.getComments() {
-			if comment.checkOtoko() {
-				comment.insert()
-			}
-		}
-	}
-
-}
