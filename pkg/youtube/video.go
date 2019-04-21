@@ -72,7 +72,8 @@ func (v *Video) setCategoryName() {
 	v.CategoryName = item.Snippet.Title
 }
 
-func (v *Video) getComments() []Comment {
+// GetComments hoge
+func (v *Video) GetComments() []Comment {
 	service := newYoutubeService()
 	call := service.CommentThreads.List("snippet").
 		VideoId(v.VideoID).
