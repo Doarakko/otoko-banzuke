@@ -19,7 +19,8 @@ type Channel struct {
 	UpdatedAt       time.Time `gorm:"column:updated_at"`
 }
 
-func (c *Channel) selectChannel() Channel {
+// Select channel
+func (c *Channel) Select() Channel {
 	db := newGormConnect()
 	defer db.Close()
 
@@ -28,13 +29,15 @@ func (c *Channel) selectChannel() Channel {
 	return *c
 }
 
-// Insert hoge
-func (c *Channel) Insert() {
+// Insert Channel
+func (c *Channel) Insert() error {
 	db := newGormConnect()
 	defer db.Close()
 
-	db.Create(&c)
-	log.Printf("Insert channel: %v\n", c)
+	r := db.Create(&c)
+	log.Printf("Insert channel: %v\n", r)
+
+	return r.Error
 }
 
 func (c *Channel) update() {
@@ -59,7 +62,7 @@ func (c *Channel) deleteVideos() {
 
 }
 
-// SetDetailInfo hoge
+// SetDetailInfo PlaylistID, ViewCount, SubscriberCount, VideoCount
 func (c *Channel) SetDetailInfo() {
 	service := newYoutubeService()
 	call := service.Channels.List("snippet,contentDetails,statistics").
@@ -78,17 +81,22 @@ func (c *Channel) SetDetailInfo() {
 	c.ViewCount = int64(item.Statistics.ViewCount)
 	c.SubscriberCount = int32(item.Statistics.SubscriberCount)
 	c.VideoCount = int32(item.Statistics.VideoCount)
-	// commentCount := item.Statistics.CommentCount
 }
 
-// TODO 日付指定
-func (c *Channel) getNewVideos() []Video {
+// GetNewVideos assume to run once a day
+func (c *Channel) GetNewVideos() []Video {
+	// put 1 day period afer video published
+	beginAt := time.Now().Add(-time.Duration(24*2) * time.Hour).Format(time.RFC3339)
+	endAt := time.Now().Add(-time.Duration(24) * time.Hour).Format(time.RFC3339)
+
 	service := newYoutubeService()
-	call := service.Search.List("id").
+	call := service.Search.List("id,snippet").
 		Type("video").
 		ChannelId(c.ChannelID).
+		PublishedAfter(beginAt).
+		PublishedBefore(endAt).
 		Order("date").
-		MaxResults(10)
+		MaxResults(50)
 	response, err := call.Do()
 	if err != nil {
 		log.Fatalf("%v", err)
@@ -121,10 +129,11 @@ func (c *Channel) getNewVideos() []Video {
 	return videos
 }
 
-func getAllVideos(playlistID string, pageToken string) []Video {
+// GetAllVideos hoge
+func (c *Channel) GetAllVideos(pageToken string) []Video {
 	service := newYoutubeService()
 	call := service.PlaylistItems.List("id,snippet,contentDetails").
-		PlaylistId(playlistID).
+		PlaylistId(c.PlaylistID).
 		PageToken(pageToken).
 		MaxResults(50)
 	response, err := call.Do()
@@ -158,7 +167,7 @@ func getAllVideos(playlistID string, pageToken string) []Video {
 
 	pageToken = response.NextPageToken
 	if pageToken != "" {
-		videos = append(videos, getAllVideos(playlistID, pageToken)...)
+		videos = append(videos, c.GetAllVideos(pageToken)...)
 	}
 	log.Printf("Get %v videos\n", len(videos))
 
@@ -198,6 +207,17 @@ func SearchChannels(q string) []Channel {
 		channels = append(channels, channel)
 	}
 	log.Printf("Get %v channels\n", len(channels))
+
+	return channels
+}
+
+// SelectAllChannels hoge
+func SelectAllChannels() []Channel {
+	db := newGormConnect()
+	defer db.Close()
+
+	channels := []Channel{}
+	db.Find(&channels)
 
 	return channels
 }
