@@ -23,7 +23,7 @@
 |view_count|total view count|int|NG|0||
 |comment_count|total comment count|int|NG|0||
 |category_id|category id|text|NG|||
-|category_name|category id|text|NG|||
+|category_name|category name|text|NG|||
 |channel_id|channel name|text|NG||`channels.channel_id`|
 |published_at|video published date|TIMESTAMP|NG|||
 |created_at||TIMESTAMP|NG|now()||
