@@ -5,7 +5,7 @@
         <link rel="shortcut icon" href="web/static/favicon.ico">
     </head>
     <body>
-        <a href="https://github.com/Doarakko/otoko-search" class="github-corner"
+        <a href="https://github.com/Doarakko/otoko-banzuke" class="github-corner"
             aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250"
                 style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
                 <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
@@ -17,8 +17,11 @@
                     fill="currentColor" class="octo-body"></path>
             </svg></a>
         <h1>漢番付</h1>
-        <h2><a href="/form">情報提供</a></h2>
+        <h2><a href="/commend">漢を探す</a></h2>
+        <h2><a href="/commend">漢を推薦する</a></h2>
             {{range .comments}}
+                {{.Rank}} 位
+                <a href="https://www.youtube.com/watch?v={{.VideoID}}"><img src="{{.ThumbnailURL}}"  width="300" height="200"></a>
                 {{.TextDisplay}} by {{.AuthorName}} 力 {{.LikeCount}} <br>
             {{end}}
        
