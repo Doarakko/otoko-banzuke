@@ -3,6 +3,8 @@ package youtube
 import (
 	"log"
 	"time"
+
+	mydb "../database"
 )
 
 // Video gare
@@ -23,7 +25,7 @@ type Video struct {
 
 // Insert video
 func (v *Video) Insert() {
-	db := newGormConnect()
+	db := mydb.NewGormConnect()
 	defer db.Close()
 
 	db.Create(&v)
@@ -37,7 +39,7 @@ func (v *Video) Delete() {
 
 // SetDetailInfo hoge
 func (v *Video) SetDetailInfo() {
-	service := newYoutubeService()
+	service := NewYoutubeService()
 	call := service.Videos.List("id,snippet,Statistics").
 		Id(v.VideoID).
 		MaxResults(1)
@@ -62,7 +64,7 @@ func (v *Video) SetDetailInfo() {
 }
 
 func (v *Video) setCategoryName() {
-	service := newYoutubeService()
+	service := NewYoutubeService()
 	call := service.VideoCategories.List("id,snippet").
 		Id(v.CategoryID)
 	response, err := call.Do()
@@ -76,7 +78,7 @@ func (v *Video) setCategoryName() {
 
 // GetComments hoge
 func (v *Video) GetComments() []Comment {
-	service := newYoutubeService()
+	service := NewYoutubeService()
 	call := service.CommentThreads.List("snippet").
 		VideoId(v.VideoID).
 		TextFormat("plainText").
