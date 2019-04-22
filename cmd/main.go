@@ -18,15 +18,16 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	comments := myyoutube.SelectAllComments()
-
 	router := gin.Default()
 	router.Static("/web/static", "../web/static")
 	router.LoadHTMLFiles("../web/template/index.tmpl", "../web/template/commend/index.tmpl")
 
+	rankComments := myyoutube.SelectRankComments()
+	todayComments := myyoutube.SelectTodayComments()
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{
-			"comments": comments,
+			"rankComments":  rankComments,
+			"todayComments": todayComments,
 		})
 	})
 
