@@ -7,8 +7,12 @@
 
 ## Requirements
 - Golang
+    - [Gin](https://github.com/gin-gonic/gin)
+    - [Gorm](https://github.com/jinzhu/gorm)
 - Youtube Data API
 - Heroku
+    - PostgreSQL
+    - Scheduler
 
 ## Usage
 
