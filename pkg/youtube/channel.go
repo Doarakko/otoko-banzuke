@@ -3,6 +3,8 @@ package youtube
 import (
 	"log"
 	"time"
+
+	mydb "../database"
 )
 
 // Channel fa
@@ -21,7 +23,7 @@ type Channel struct {
 
 // Select channel
 func (c *Channel) Select() Channel {
-	db := newGormConnect()
+	db := mydb.NewGormConnect()
 	defer db.Close()
 
 	db.First(&c, "channel_id=?", c.ChannelID)
@@ -31,7 +33,7 @@ func (c *Channel) Select() Channel {
 
 // Insert Channel
 func (c *Channel) Insert() error {
-	db := newGormConnect()
+	db := mydb.NewGormConnect()
 	defer db.Close()
 
 	r := db.Create(&c)
@@ -49,7 +51,7 @@ func (c *Channel) delete() {
 }
 
 func (c *Channel) selectVideos() []Video {
-	db := newGormConnect()
+	db := mydb.NewGormConnect()
 	defer db.Close()
 
 	videos := []Video{}
@@ -64,7 +66,7 @@ func (c *Channel) deleteVideos() {
 
 // SetDetailInfo PlaylistID, ViewCount, SubscriberCount, VideoCount
 func (c *Channel) SetDetailInfo() {
-	service := newYoutubeService()
+	service := NewYoutubeService()
 	call := service.Channels.List("snippet,contentDetails,statistics").
 		Id(c.ChannelID).
 		MaxResults(1)
@@ -89,7 +91,7 @@ func (c *Channel) GetNewVideos() []Video {
 	beginAt := time.Now().Add(-time.Duration(24*2) * time.Hour).Format(time.RFC3339)
 	endAt := time.Now().Add(-time.Duration(24) * time.Hour).Format(time.RFC3339)
 
-	service := newYoutubeService()
+	service := NewYoutubeService()
 	call := service.Search.List("id,snippet").
 		Type("video").
 		ChannelId(c.ChannelID).
@@ -131,7 +133,7 @@ func (c *Channel) GetNewVideos() []Video {
 
 // GetAllVideos hoge
 func (c *Channel) GetAllVideos(pageToken string) []Video {
-	service := newYoutubeService()
+	service := NewYoutubeService()
 	call := service.PlaylistItems.List("id,snippet,contentDetails").
 		PlaylistId(c.PlaylistID).
 		PageToken(pageToken).
@@ -178,42 +180,9 @@ func getHighRatedVideos(playlistID string, pageToken string) {
 
 }
 
-// SearchChannels hoge
-func SearchChannels(q string) []Channel {
-	service := newYoutubeService()
-	call := service.Search.List("id,snippet").
-		Type("channel").
-		Q(q).
-		Order("relevance").
-		MaxResults(10)
-	response, err := call.Do()
-	if err != nil {
-		log.Fatalf("%v", err)
-	}
-
-	channels := []Channel{}
-	for _, item := range response.Items {
-		channelID := item.Id.ChannelId
-		title := item.Snippet.Title
-		description := item.Snippet.Description
-		thumbnailURL := item.Snippet.Thumbnails.High.Url
-
-		channel := Channel{
-			ChannelID:    channelID,
-			Name:         title,
-			Description:  description,
-			ThumbnailURL: thumbnailURL,
-		}
-		channels = append(channels, channel)
-	}
-	log.Printf("Get %v channels\n", len(channels))
-
-	return channels
-}
-
-// SelectAllChannels hoge
+// SelectAllChannels select all channels
 func SelectAllChannels() []Channel {
-	db := newGormConnect()
+	db := mydb.NewGormConnect()
 	defer db.Close()
 
 	channels := []Channel{}
