@@ -4,6 +4,8 @@ import (
 	"log"
 	"regexp"
 	"time"
+
+	mydb "../database"
 )
 
 // Comment gaerg
@@ -22,11 +24,9 @@ type Comment struct {
 	ThumbnailURL string    `gorm:"-"`
 }
 
-var re = regexp.MustCompile("^.+(男|漢|おとこ|オトコ|女|おんな|オンナ).{0,1}$")
-
 // Insert comment
 func (c *Comment) Insert() {
-	db := newGormConnect()
+	db := mydb.NewGormConnect()
 	defer db.Close()
 
 	db.Create(&c)
@@ -43,34 +43,9 @@ func (c *Comment) Delete() {
 
 }
 
+var re = regexp.MustCompile("^.+(男|漢|おとこ|オトコ|女|おんな|オンナ).{0,1}$")
+
 // CheckOtoko oge
 func (c *Comment) CheckOtoko() bool {
-	if re.MatchString(c.TextDisplay) {
-		return true
-	}
-	return false
-}
-
-// SelectRankComments get comments
-func SelectRankComments() []Comment {
-	db := newGormConnect()
-	defer db.Close()
-
-	comments := []Comment{}
-	db.Select("*, RANK() OVER (ORDER BY comments.like_count DESC)").Order("rank").Joins("JOIN videos ON videos.video_id = comments.video_id").Find(&comments)
-
-	return comments
-}
-
-// SelectTodayComments get today comments
-func SelectTodayComments() []Comment {
-	db := newGormConnect()
-	defer db.Close()
-
-	comments := []Comment{}
-
-	preAt := time.Now().Add(-time.Duration(24 * time.Hour))
-	db.Where("created_at >= ?", preAt).Order("like_count desc").Find(&comments)
-
-	return comments
+	return re.MatchString(c.TextDisplay)
 }
