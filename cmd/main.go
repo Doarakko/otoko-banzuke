@@ -4,8 +4,10 @@ import (
 	"log"
 	"net/http"
 
+	banzuke "../internal/banzuke"
+	commend "../internal/commend"
+	search "../internal/search"
 	myyoutube "../pkg/youtube"
-
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/joho/godotenv"
@@ -20,10 +22,11 @@ func main() {
 
 	router := gin.Default()
 	router.Static("/web/static", "../web/static")
-	router.LoadHTMLFiles("../web/template/index.tmpl", "../web/template/commend/index.tmpl")
+	router.LoadHTMLFiles("../web/template/index.tmpl", "../web/template/commend/index.tmpl", "../web/template/search/index.tmpl")
 
-	rankComments := myyoutube.SelectRankComments()
-	todayComments := myyoutube.SelectTodayComments()
+	// 番付
+	rankComments := banzuke.SelectRankComments()
+	todayComments := banzuke.SelectTodayComments()
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{
 			"rankComments":  rankComments,
@@ -31,6 +34,7 @@ func main() {
 		})
 	})
 
+	// 漢を推薦する
 	channels := []myyoutube.Channel{}
 	router.GET("/commend", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "commend/index.tmpl", gin.H{
@@ -43,18 +47,29 @@ func main() {
 		channelID := c.PostForm("channel_id")
 
 		if query != "" {
-			channels = myyoutube.SearchChannels(query)
+			channels = commend.SearchChannels(query)
 			for i := range channels {
 				channels[i].SetDetailInfo()
 			}
-		} else {
-			channel := myyoutube.Channel{
-				ChannelID: channelID,
-			}
-			channel.SetDetailInfo()
-			channel.Insert()
+		} else if channelID != "" {
+			commend.InsertChannel(channelID)
 		}
 		c.Redirect(302, "/commend")
+	})
+
+	// 漢を探す
+	comments := []myyoutube.Comment{}
+	router.GET("/search", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "search/index.tmpl", gin.H{
+			"comments": comments,
+		})
+	})
+
+	router.POST("/search", func(c *gin.Context) {
+		query := c.PostForm("query")
+		comments = search.SearchOtoko(query)
+
+		c.Redirect(302, "/search")
 	})
 
 	router.Run(":8080")
