@@ -21,7 +21,8 @@ type Video struct {
 	UpdatedAt    time.Time `gorm:"column:updated_at"`
 }
 
-func (v *Video) insertVideo() {
+// Insert video
+func (v *Video) Insert() {
 	db := newGormConnect()
 	defer db.Close()
 
@@ -29,7 +30,8 @@ func (v *Video) insertVideo() {
 	log.Printf("Insert video: %v\n", v)
 }
 
-func (v *Video) deleteVideo() {
+// Delete video
+func (v *Video) Delete() {
 
 }
 
