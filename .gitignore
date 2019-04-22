@@ -12,7 +12,3 @@
 *.out
 
 .env
-
-# 
-pkg/youtube/youtube
-main
