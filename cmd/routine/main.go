@@ -1,11 +1,8 @@
 package main
 
 import (
-	"log"
-
 	myyoutube "github.com/Doarakko/otoko-banzuke/pkg/youtube"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"github.com/joho/godotenv"
 )
 
 func updateAllComments() {
@@ -13,10 +10,10 @@ func updateAllComments() {
 }
 
 func main() {
-	err := godotenv.Load("../../.env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	// err := godotenv.Load("../../.env")
+	// if err != nil {
+	// 	log.Fatal("Error loading .env file")
+	// }
 
 	for _, channel := range myyoutube.SelectAllChannels() {
 		for _, video := range channel.GetNewVideos() {

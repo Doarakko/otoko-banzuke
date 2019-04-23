@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 
 	banzuke "github.com/Doarakko/otoko-banzuke/internal/banzuke"
@@ -10,15 +9,14 @@ import (
 	myyoutube "github.com/Doarakko/otoko-banzuke/pkg/youtube"
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"github.com/joho/godotenv"
 )
 
 func main() {
 
-	err := godotenv.Load("../.env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	// err := godotenv.Load("../.env")
+	// if err != nil {
+	// 	log.Fatal("Error loading .env file")
+	// }
 
 	router := gin.Default()
 	router.Static("/web/static", "../web/static")
