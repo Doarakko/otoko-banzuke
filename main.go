@@ -70,5 +70,7 @@ func main() {
 		c.Redirect(302, "/search")
 	})
 
-	router.Run(":8080")
+	// local
+	// router.Run(":8080")
+	router.Run()
 }
