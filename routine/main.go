@@ -8,6 +8,18 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
+func updateAllChannels() {
+
+}
+
+func updateAllVideos() {
+
+}
+
+func updateAllComments() {
+
+}
+
 func selectAllChannels() []myyoutube.Channel {
 	db := mydb.NewGormConnect()
 	defer db.Close()
@@ -30,14 +42,6 @@ func selectNewChannels() []myyoutube.Channel {
 	return channels
 }
 
-func updateAllComments() {
-
-}
-
-func updateAllChannels() {
-
-}
-
 func searchNewOtoko() {
 	for _, channel := range selectAllChannels() {
 		for _, video := range channel.GetNewVideos() {
@@ -52,7 +56,7 @@ func searchNewOtoko() {
 }
 
 func searchAllOtoko() {
-	for _, channel := range selectAllChannels() {
+	for _, channel := range selectNewChannels() {
 		for _, video := range channel.GetAllVideos("") {
 			for _, comment := range video.GetComments() {
 				if comment.CheckOtoko() {
@@ -65,6 +69,6 @@ func searchAllOtoko() {
 }
 
 func main() {
-	updateAllChannels()
-
+	searchAllOtoko()
+	searchNewOtoko()
 }
