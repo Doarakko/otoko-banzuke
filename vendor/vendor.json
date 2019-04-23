@@ -2,11 +2,11 @@
     "rootPath": "github.com/Doarakko/otoko-banzuke",
     "heroku": {
         "install": [
-            "../pkg/youtube",
-            "../pkg/database",
-            "../internal/banzuke",
-            "../internal/commend",
-            "../internal/search"
+            "./pkg/youtube",
+            "./pkg/database",
+            "./internal/banzuke",
+            "./internal/commend",
+            "./internal/search"
         ],
         "goVersion": "go1.12.4"
     }
