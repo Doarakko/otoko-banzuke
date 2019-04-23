@@ -152,6 +152,7 @@ func (c *Channel) GetAllVideos(pageToken string) []Video {
 			log.Printf(">>>>>>>>>>>>>>>>>>>>>>>> %v", item.Snippet.ResourceId.Kind)
 			continue
 		}
+		log.Printf(">>>>>>>>>>>>>>>>>>>>>>>> %v", item.Snippet.ResourceId.Kind)
 
 		videoID := item.ContentDetails.VideoId
 		title := item.Snippet.Title
