@@ -37,7 +37,7 @@
 |author_name|author name|text|NG|||
 |author_url|author url|text|NG||not channel id|
 |like_count|total like count|int|NG|0||
-|reply count|total reply count|int|NG|0||
+|reply_count|total reply count|int|NG|0||
 |channel_id|channel id|text|NG||`channels.channel_id`|
 |video_id|video id|text|NG||`videos.video_id`|
 |published_at|video published date|TIMESTAMP|NG|||
