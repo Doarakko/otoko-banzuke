@@ -26,7 +26,7 @@
             <input type="submit" value="検索"></p>
         </form>
         {{range .comments}}
-        <a href="https://www.youtube.com/watch?v={{.VideoID}}"><img src="{{.ThumbnailURL}}"  width="300" height="200"></a>
+        <a href="https://www.youtube.com/watch?v={{.VideoID}}" target=”_blank”><img src="{{.ThumbnailURL}}"  width="300" height="200"></a>
         {{.TextDisplay}} 
         情報提供者 <a href="{{.AuthorURL}}" target=”_blank”>{{.AuthorName}}</a>
         いいね数 {{.LikeCount}}<br>

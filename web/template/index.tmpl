@@ -21,7 +21,7 @@
         <h2><a href="/commend">漢を推薦する</a></h2>
         <h2>本日の漢</h2>
         {{range .todayComments}}
-            <a href="https://www.youtube.com/watch?v={{.VideoID}}"><img src="{{.ThumbnailURL}}"  width="300" height="200"></a>
+            <a href="https://www.youtube.com/watch?v={{.VideoID}}" target=”_blank”><img src="{{.ThumbnailURL}}"  width="300" height="200"></a>
             {{.TextDisplay}} 
             情報提供者 <a href="{{.AuthorURL}}" target=”_blank”>{{.AuthorName}}</a>
             いいね数 {{.LikeCount}}<br>
@@ -29,7 +29,7 @@
          <h2>番付</h2>
         {{range .rankComments}}
             {{.Rank}} 位
-            <a href="https://www.youtube.com/watch?v={{.VideoID}}"><img src="{{.ThumbnailURL}}"  width="300" height="200"></a>
+            <a href="https://www.youtube.com/watch?v={{.VideoID}}" target=”_blank”><img src="{{.ThumbnailURL}}"  width="300" height="200"></a>
             {{.TextDisplay}} 
             情報提供者 <a href="{{.AuthorURL}}" target=”_blank”>{{.AuthorName}}</a>
             いいね数 {{.LikeCount}}<br>
