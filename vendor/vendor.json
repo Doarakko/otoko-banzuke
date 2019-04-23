@@ -1,3 +1,6 @@
 {
-    "rootPath": "github.com/Doarakko/otoko-banzuke"
+    "rootPath": "github.com/Doarakko/otoko-banzuke",
+    "heroku": {
+        "goVersion": "go1.12.4"
+    }
 }
