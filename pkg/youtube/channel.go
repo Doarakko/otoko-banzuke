@@ -42,11 +42,13 @@ func (c *Channel) Insert() error {
 	return r.Error
 }
 
-func (c *Channel) update() {
+// Update channel
+func (c *Channel) Update() {
 
 }
 
-func (c *Channel) delete() {
+// Delete channel
+func (c *Channel) Delete() {
 
 }
 
@@ -174,19 +176,4 @@ func (c *Channel) GetAllVideos(pageToken string) []Video {
 	log.Printf("Get %v videos\n", len(videos))
 
 	return videos
-}
-
-func getHighRatedVideos(playlistID string, pageToken string) {
-
-}
-
-// SelectAllChannels select all channels
-func SelectAllChannels() []Channel {
-	db := mydb.NewGormConnect()
-	defer db.Close()
-
-	channels := []Channel{}
-	db.Find(&channels)
-
-	return channels
 }
