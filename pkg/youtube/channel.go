@@ -147,6 +147,12 @@ func (c *Channel) GetAllVideos(pageToken string) []Video {
 
 	videos := []Video{}
 	for _, item := range response.Items {
+		//
+		if item.Snippet.ResourceId.Kind != "youtube#video" {
+			log.Printf(">>>>>>>>>>>>>>>>>>>>>>>> %v", item.Snippet.ResourceId.Kind)
+			continue
+		}
+
 		videoID := item.ContentDetails.VideoId
 		title := item.Snippet.Title
 		description := item.Snippet.Description
