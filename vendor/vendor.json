@@ -1,6 +1,15 @@
 {
     "rootPath": "github.com/Doarakko/otoko-banzuke",
     "heroku": {
+        "install": [
+            "github.com/jinzhu/gorm/dialects/postgres",
+            "github.com/gin-gonic/gin",
+            "github.com/Doarakko/otoko-banzuke/pkg/database",
+            "github.com/Doarakko/otoko-banzuke/pkg/youtube",
+            "github.com/Doarakko/otoko-banzuke/internal/banzuke",
+            "github.com/Doarakko/otoko-banzuke/internal/commend",
+            "github.com/Doarakko/otoko-banzuke/internal/search" 
+        ],
         "goVersion": "go1.12.4"
     }
 }
