@@ -19,7 +19,7 @@ func main() {
 	// }
 
 	router := gin.Default()
-	router.Static("/web/static", "../web/static")
+	router.Static("/web/static", "./web/static")
 	router.LoadHTMLGlob("templates/*")
 
 	// 番付
