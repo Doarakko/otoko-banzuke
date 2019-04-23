@@ -32,7 +32,7 @@ func SelectTodayComments() []myyoutube.Comment {
 	db.Select("comments.text_display, comments.like_count, comments.video_id, comments.author_name, comments.author_url, videos.thumbnail_url").
 		Where("comments.created_at >= ?", preAt).
 		Joins("JOIN videos ON videos.video_id = comments.video_id").
-		Order("like_count desc").
+		Order("comments.created_at desc").
 		Find(&comments)
 
 	return comments
