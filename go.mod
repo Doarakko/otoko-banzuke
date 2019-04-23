@@ -1,9 +1,13 @@
 module github.com/Doarakko/otoko-banzuke
 
-go1.12.4
+go 1.12
 
 require (
-    "google.golang.org/api/googleapi/transport"
-    "google.golang.org/api/youtube/v3"
-    "github.com/gin-gonic/gin"
+	github.com/gin-contrib/sse v0.0.0-20190301062529-5545eab6dad3 // indirect
+	github.com/gin-gonic/gin v1.3.0
+	github.com/jinzhu/gorm v1.9.4
+	github.com/mattn/go-isatty v0.0.7 // indirect
+	github.com/ugorji/go v1.1.4 // indirect
+	google.golang.org/api v0.3.2
+	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
 )
