@@ -29,7 +29,10 @@ func SelectTodayComments() []myyoutube.Comment {
 	comments := []myyoutube.Comment{}
 
 	preAt := time.Now().Add(-time.Duration(24 * time.Hour))
-	db.Where("created_at >= ?", preAt).Order("like_count desc").Find(&comments)
+	db.Select("comments.text_display, comments.like_count, comments.video_id, comments.author_name, comments.author_url, videos.thumbnail_url").
+		Where("created_at >= ?", preAt).
+		Order("like_count desc").
+		Find(&comments)
 
 	return comments
 }
