@@ -16,7 +16,7 @@
     "DATABASE_URL": {
       "description": "Postgres",
       "value": "hoge"
-    },
+    }
   },
   "addons": [
     "scheduler:standard",
