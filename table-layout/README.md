@@ -6,7 +6,6 @@
 |name|channel name|text|NG|||
 |description|channel description|text|NG|||
 |thumbnail_url|thumbnail URL|text|NG||
-|playlist_id|playlist ID|text|OK||
 |view_count|total view count|int|NG|0||
 |video_count|total video count|int|NG|0||
 |subscriber_count|total subscriber count|int|NG|0||
