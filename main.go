@@ -19,8 +19,9 @@ func main() {
 	// }
 
 	router := gin.Default()
-	router.Static("/web/static", "./web/static")
-	router.LoadHTMLGlob("templates/*")
+	router.Static("/web/static", "../web/static")
+	router.LoadHTMLFiles("web/template/index.tmpl", "web/template/commend/index.tmpl", "web/template/search/index.tmpl")
+	//router.LoadHTMLGlob("web/template/*")
 
 	// 番付
 	rankComments := banzuke.SelectRankComments()
