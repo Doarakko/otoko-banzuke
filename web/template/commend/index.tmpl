@@ -18,7 +18,7 @@
                     fill="currentColor" class="octo-body"></path>
             </svg></a>
         <h1>漢を推薦する</h1>
-        <h2><a href="/">番付表</a></h2>
+        <h2><a href="/">番付</a></h2>
         <h2><a href="/search">漢を探す</a></h2>
         <form method="post" action="/commend">
             <input name="query" type="text"  placeholder="ポケモン">
@@ -26,7 +26,7 @@
         </form>
         {{range .channels}}
             <form method="post" action="/commend">
-                <img src="{{.ThumbnailURL}}"  width="200" height="200">
+                <a href="https://www.youtube.com/channel/{{.ChannelID}}" target=”_blank”><img src="{{.ThumbnailURL}}"  width="200" height="200"></a>
                 <a href="https://www.youtube.com/channel/{{.ChannelID}}" target=”_blank”>{{.Name}}</a>
                 チャンネル登録者: {{.SubscriberCount}} 人
                 <input type='hidden' name='channel_id' value={{.ChannelID}}>
