@@ -14,8 +14,8 @@ func SelectRankComments() []myyoutube.Comment {
 
 	comments := []myyoutube.Comment{}
 	db.Select("comments.text_display, comments.like_count, comments.video_id, comments.author_name, comments.author_url, videos.thumbnail_url, RANK() OVER (ORDER BY comments.like_count DESC)").
-		Order("rank").
 		Joins("JOIN videos ON videos.video_id = comments.video_id").
+		Order("rank").
 		Find(&comments)
 
 	return comments
@@ -30,7 +30,8 @@ func SelectTodayComments() []myyoutube.Comment {
 
 	preAt := time.Now().Add(-time.Duration(24 * time.Hour))
 	db.Select("comments.text_display, comments.like_count, comments.video_id, comments.author_name, comments.author_url, videos.thumbnail_url").
-		Where("created_at >= ?", preAt).
+		Where("comments.created_at >= ?", preAt).
+		Joins("JOIN videos ON videos.video_id = comments.video_id").
 		Order("like_count desc").
 		Find(&comments)
 
