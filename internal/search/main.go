@@ -1,9 +1,8 @@
 package search
 
 import (
-	myyoutube "../../pkg/youtube"
-
-	mydb "../../pkg/database"
+	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
+	myyoutube "github.com/Doarakko/otoko-banzuke/pkg/youtube"
 )
 
 // SearchOtoko hoge

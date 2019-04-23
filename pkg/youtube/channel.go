@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	mydb "../database"
+	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
 )
 
 // Channel fa
