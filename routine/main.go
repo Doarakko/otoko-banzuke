@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"time"
 
 	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
@@ -45,10 +46,14 @@ func selectNewChannels() []myyoutube.Channel {
 func searchNewOtoko() {
 	for _, channel := range selectAllChannels() {
 		for _, video := range channel.GetNewVideos() {
+			createdFlag := false
 			for _, comment := range video.GetComments() {
 				if comment.CheckOtoko() {
-					video.Insert()
+					if !createdFlag {
+						video.Insert()
+					}
 					comment.Insert()
+					createdFlag = true
 				}
 			}
 		}
@@ -58,10 +63,15 @@ func searchNewOtoko() {
 func searchAllOtoko() {
 	for _, channel := range selectNewChannels() {
 		for _, video := range channel.GetAllVideos("") {
+			createdFlag := false
+			log.Printf("========================start video===========%v=============\n", video.VideoID)
 			for _, comment := range video.GetComments() {
 				if comment.CheckOtoko() {
-					video.Insert()
+					if !createdFlag {
+						video.Insert()
+					}
 					comment.Insert()
+					createdFlag = true
 				}
 			}
 		}
