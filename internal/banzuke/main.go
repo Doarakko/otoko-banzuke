@@ -3,8 +3,8 @@ package banzuke
 import (
 	"time"
 
-	mydb "../../pkg/database"
-	myyoutube "../../pkg/youtube"
+	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
+	myyoutube "github.com/Doarakko/otoko-banzuke/pkg/youtube"
 )
 
 // SelectRankComments get comments

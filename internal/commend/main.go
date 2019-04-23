@@ -3,7 +3,7 @@ package commend
 import (
 	"log"
 
-	myyoutube "../../pkg/youtube"
+	myyoutube "github.com/Doarakko/otoko-banzuke/pkg/youtube"
 )
 
 // SearchChannels hoge

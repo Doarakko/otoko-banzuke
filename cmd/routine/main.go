@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	myyoutube "../../pkg/youtube"
+	myyoutube "github.com/Doarakko/otoko-banzuke/pkg/youtube"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/joho/godotenv"
 )
