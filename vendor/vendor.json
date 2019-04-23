@@ -2,9 +2,6 @@
     "rootPath": "github.com/Doarakko/otoko-banzuke",
     "heroku": {
         "install": [
-            "github.com/gin-gonic/gin",
-            "google.golang.org/api/googleapi/transport",
-	        "google.golang.org/api/youtube/v3",
             "./pkg/youtube",
             "./pkg/database",
             "./internal/banzuke",
