@@ -1,1 +1,1 @@
-web: bin/otoko-banzuke
+web: otoko-banzuke
