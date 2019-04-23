@@ -1,6 +1,6 @@
 module github.com/Doarakko/otoko-banzuke
 
-go 1.12
+go1.12.4
 
 require (
     "google.golang.org/api/googleapi/transport"
