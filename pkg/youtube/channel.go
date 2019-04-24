@@ -9,15 +9,15 @@ import (
 
 // Channel struct
 type Channel struct {
-	ChannelID       string    `gorm:"column:channel_id"`
-	Name            string    `gorm:"column:name"`
-	Description     string    `gorm:"column:description"`
-	ThumbnailURL    string    `gorm:"column:thumbnail_url"`
-	ViewCount       int64     `gorm:"column:view_count"`
-	VideoCount      int32     `gorm:"column:video_count"`
-	SubscriberCount int32     `gorm:"column:subscriber_count"`
-	CreatedAt       time.Time `gorm:"column:created_at"`
-	UpdatedAt       time.Time `gorm:"column:updated_at"`
+	ChannelID       string    `gorm:"column:channel_id;primary_key"`
+	Name            string    `gorm:"column:name;not null"`
+	Description     string    `gorm:"column:description;not null"`
+	ThumbnailURL    string    `gorm:"column:thumbnail_url;not null"`
+	ViewCount       int64     `gorm:"column:view_count;not null"`
+	VideoCount      int32     `gorm:"column:video_count;not null"`
+	SubscriberCount int32     `gorm:"column:subscriber_count;not null"`
+	CreatedAt       time.Time `gorm:"column:created_at;not null"`
+	UpdatedAt       time.Time `gorm:"column:updated_at;not null"`
 }
 
 // Exists if channel exist return true
@@ -35,6 +35,8 @@ func (c *Channel) Insert() error {
 	db := mydb.NewGormConnect()
 	defer db.Close()
 
+	c.SetDetailInfo()
+
 	r := db.Create(&c)
 	log.Printf("Insert channel: %v\n", r)
 
@@ -43,7 +45,20 @@ func (c *Channel) Insert() error {
 
 // Update channel
 func (c *Channel) Update() {
+	db := mydb.NewGormConnect()
+	defer db.Close()
 
+	c.SetDetailInfo()
+
+	db.Model(&c).Updates(Channel{
+		Name:            c.Name,
+		Description:     c.Description,
+		ThumbnailURL:    c.ThumbnailURL,
+		ViewCount:       c.ViewCount,
+		SubscriberCount: c.SubscriberCount,
+		VideoCount:      c.VideoCount,
+	})
+	log.Printf("Update channel: %v\n", c.ChannelID)
 }
 
 // Delete channel
@@ -59,10 +74,6 @@ func (c *Channel) selectVideos() []Video {
 	db.Find(&videos, "channel_id=?", c.ChannelID)
 
 	return videos
-}
-
-func (c *Channel) deleteVideos() {
-
 }
 
 // SetDetailInfo ViewCount, SubscriberCount, VideoCount
