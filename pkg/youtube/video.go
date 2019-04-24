@@ -9,18 +9,18 @@ import (
 
 // Video struct
 type Video struct {
-	VideoID      string    `gorm:"column:video_id"`
-	Title        string    `gorm:"column:title"`
-	Description  string    `gorm:"column:description"`
-	ThumbnailURL string    `gorm:"column:thumbnail_url"`
-	ViewCount    int64     `gorm:"column:view_count"`
-	CommentCount int32     `gorm:"column:comment_count"`
-	PublishedAt  time.Time `gorm:"column:published_at"`
-	CategoryID   string    `gorm:"column:category_id"`
-	CategoryName string    `gorm:"column:category_name"`
-	ChannelID    string    `gorm:"column:channel_id"`
-	CreatedAt    time.Time `gorm:"column:created_at"`
-	UpdatedAt    time.Time `gorm:"column:updated_at"`
+	VideoID      string    `gorm:"column:video_id;primary_key"`
+	Title        string    `gorm:"column:title;not null"`
+	Description  string    `gorm:"column:description;not null"`
+	ThumbnailURL string    `gorm:"column:thumbnail_url;not null"`
+	ViewCount    int64     `gorm:"column:view_count;not null"`
+	CommentCount int32     `gorm:"column:comment_count;not null"`
+	PublishedAt  time.Time `gorm:"column:published_at;not null"`
+	CategoryID   string    `gorm:"column:category_id;not null"`
+	CategoryName string    `gorm:"column:category_name;not null"`
+	ChannelID    string    `gorm:"column:channel_id;not null;index"`
+	CreatedAt    time.Time `gorm:"column:created_at;not null"`
+	UpdatedAt    time.Time `gorm:"column:updated_at;not null"`
 }
 
 // Exists if video exist return true
@@ -38,8 +38,28 @@ func (v *Video) Insert() {
 	db := mydb.NewGormConnect()
 	defer db.Close()
 
+	v.SetDetailInfo()
 	db.Create(&v)
 	log.Printf("Insert video: %v\n", v)
+}
+
+// Update video
+func (v *Video) Update() {
+	db := mydb.NewGormConnect()
+	defer db.Close()
+
+	v.SetDetailInfo()
+
+	db.Model(&v).Updates(Video{
+		Title:        v.Title,
+		Description:  v.Description,
+		ThumbnailURL: v.ThumbnailURL,
+		ViewCount:    v.ViewCount,
+		CommentCount: v.CommentCount,
+		CategoryID:   v.CategoryID,
+		CategoryName: v.CategoryName,
+	})
+	log.Printf("Update video: %v\n", v.VideoID)
 }
 
 // Delete video
@@ -50,7 +70,7 @@ func (v *Video) Delete() {
 // SetDetailInfo ViewCount, CommentCount, CategoryID, CategoryName
 func (v *Video) SetDetailInfo() {
 	service := NewYoutubeService()
-	call := service.Videos.List("id,snippet,Statistics").
+	call := service.Videos.List("snippet,Statistics").
 		Id(v.VideoID).
 		MaxResults(1)
 	response, err := call.Do()
@@ -75,7 +95,7 @@ func (v *Video) SetDetailInfo() {
 
 func (v *Video) setCategoryName() {
 	service := NewYoutubeService()
-	call := service.VideoCategories.List("id,snippet").
+	call := service.VideoCategories.List("snippet").
 		Id(v.CategoryID)
 	response, err := call.Do()
 	if err != nil {
