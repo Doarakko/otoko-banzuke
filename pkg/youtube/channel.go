@@ -1,19 +1,18 @@
 package youtube
 
 import (
+	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
+	"google.golang.org/api/youtube/v3"
 	"log"
 	"time"
-
-	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
 )
 
-// Channel fa
+// Channel struct
 type Channel struct {
 	ChannelID       string    `gorm:"column:channel_id"`
 	Name            string    `gorm:"column:name"`
 	Description     string    `gorm:"column:description"`
 	ThumbnailURL    string    `gorm:"column:thumbnail_url"`
-	PlaylistID      string    `gorm:"column:playlist_id"`
 	ViewCount       int64     `gorm:"column:view_count"`
 	VideoCount      int32     `gorm:"column:video_count"`
 	SubscriberCount int32     `gorm:"column:subscriber_count"`
@@ -21,14 +20,14 @@ type Channel struct {
 	UpdatedAt       time.Time `gorm:"column:updated_at"`
 }
 
-// Select channel
-func (c *Channel) Select() Channel {
+// Exists if channel exist return true
+func (c *Channel) Exists() bool {
 	db := mydb.NewGormConnect()
 	defer db.Close()
 
-	db.First(&c, "channel_id=?", c.ChannelID)
+	result := db.First(&c, "channel_id=?", c.ChannelID)
 
-	return *c
+	return result.Error == nil
 }
 
 // Insert Channel
@@ -66,10 +65,10 @@ func (c *Channel) deleteVideos() {
 
 }
 
-// SetDetailInfo PlaylistID, ViewCount, SubscriberCount, VideoCount
+// SetDetailInfo ViewCount, SubscriberCount, VideoCount
 func (c *Channel) SetDetailInfo() {
 	service := NewYoutubeService()
-	call := service.Channels.List("snippet,contentDetails,statistics").
+	call := service.Channels.List("snippet,statistics").
 		Id(c.ChannelID).
 		MaxResults(1)
 	response, err := call.Do()
@@ -81,7 +80,6 @@ func (c *Channel) SetDetailInfo() {
 	c.Name = item.Snippet.Title
 	c.Description = item.Snippet.Description
 	c.ThumbnailURL = item.Snippet.Thumbnails.High.Url
-	c.PlaylistID = item.ContentDetails.RelatedPlaylists.Uploads
 	c.ViewCount = int64(item.Statistics.ViewCount)
 	c.SubscriberCount = int32(item.Statistics.SubscriberCount)
 	c.VideoCount = int32(item.Statistics.VideoCount)
@@ -108,36 +106,19 @@ func (c *Channel) GetNewVideos() []Video {
 
 	videos := []Video{}
 	for _, item := range response.Items {
-		videoID := item.Id.VideoId
-		title := item.Snippet.Title
-		description := item.Snippet.Description
-		thumbnailURL := item.Snippet.Thumbnails.High.Url
-		channelID := item.Snippet.ChannelId
-		publishedAt, err := time.Parse(time.RFC3339, item.Snippet.PublishedAt)
-		if err != nil {
-			log.Fatalf("%v", err)
-		}
-
-		video := Video{
-			VideoID:      videoID,
-			Title:        title,
-			Description:  description,
-			ThumbnailURL: thumbnailURL,
-			ChannelID:    channelID,
-			PublishedAt:  publishedAt,
-		}
-		videos = append(videos, video)
+		videos = append(videos, newVideo(*item))
 	}
-	log.Printf("Get %v videos\n", len(videos))
+	log.Printf("Get %v new videos\n", len(videos))
 
 	return videos
 }
 
-// GetAllVideos hoge
+// GetAllVideos get all videos
 func (c *Channel) GetAllVideos(pageToken string) []Video {
 	service := NewYoutubeService()
-	call := service.PlaylistItems.List("id,snippet,contentDetails").
-		PlaylistId(c.PlaylistID).
+	call := service.Search.List("id,snippet").
+		Type("video").
+		ChannelId(c.ChannelID).
 		PageToken(pageToken).
 		MaxResults(50)
 	response, err := call.Do()
@@ -147,32 +128,7 @@ func (c *Channel) GetAllVideos(pageToken string) []Video {
 
 	videos := []Video{}
 	for _, item := range response.Items {
-		//
-		if item.Snippet.ResourceId.Kind != "youtube#video" {
-			log.Printf(">>>>>>>>>>>>>>>>>>>>>>>> %v", item.Snippet.ResourceId.Kind)
-			continue
-		}
-
-		videoID := item.ContentDetails.VideoId
-		title := item.Snippet.Title
-		description := item.Snippet.Description
-		thumbnailURL := item.Snippet.Thumbnails.High.Url
-		channelID := item.Snippet.ChannelId
-		publishedAt, err := time.Parse(time.RFC3339, item.Snippet.PublishedAt)
-		if err != nil {
-			log.Fatalf("%v", err)
-		}
-
-		video := Video{
-			VideoID:      videoID,
-			Title:        title,
-			Description:  description,
-			ThumbnailURL: thumbnailURL,
-			ChannelID:    channelID,
-			PublishedAt:  publishedAt,
-		}
-
-		videos = append(videos, video)
+		videos = append(videos, newVideo(*item))
 	}
 
 	pageToken = response.NextPageToken
@@ -182,4 +138,26 @@ func (c *Channel) GetAllVideos(pageToken string) []Video {
 	log.Printf("Get %v videos\n", len(videos))
 
 	return videos
+}
+
+func newVideo(item youtube.SearchResult) Video {
+	videoID := item.Id.VideoId
+	title := item.Snippet.Title
+	description := item.Snippet.Description
+	thumbnailURL := item.Snippet.Thumbnails.High.Url
+	channelID := item.Snippet.ChannelId
+	publishedAt, err := time.Parse(time.RFC3339, item.Snippet.PublishedAt)
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+
+	video := Video{
+		VideoID:      videoID,
+		Title:        title,
+		Description:  description,
+		ThumbnailURL: thumbnailURL,
+		ChannelID:    channelID,
+		PublishedAt:  publishedAt,
+	}
+	return video
 }

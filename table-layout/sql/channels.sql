@@ -4,7 +4,6 @@ CREATE TABLE channels
     name text NOT NULL,
     description text NOT NULL,
     thumbnail_url text NOT NULL,
-    playlist_id text,
     view_count int DEFAULT 0,
     video_count int DEFAULT 0,
     subscriber_count int DEFAULT 0,
@@ -13,3 +12,4 @@ CREATE TABLE channels
     PRIMARY KEY (channel_id)
 );
 
+-- ALTER TABLE channels DROP COLUMN playlist_id;

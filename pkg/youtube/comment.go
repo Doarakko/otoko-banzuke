@@ -8,7 +8,7 @@ import (
 	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
 )
 
-// Comment gaerg
+// Comment struct
 type Comment struct {
 	CommentID    string    `gorm:"column:comment_id"`
 	TextDisplay  string    `gorm:"column:text_display"`
@@ -45,7 +45,7 @@ func (c *Comment) Delete() {
 
 var re = regexp.MustCompile("^.+(男|漢|おとこ|オトコ|女|おんな|オンナ).{0,1}$")
 
-// CheckOtoko oge
+// CheckOtoko if otoko comment return true
 func (c *Comment) CheckOtoko() bool {
 	return re.MatchString(c.TextDisplay)
 }

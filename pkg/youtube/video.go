@@ -7,7 +7,7 @@ import (
 	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
 )
 
-// Video gare
+// Video struct
 type Video struct {
 	VideoID      string    `gorm:"column:video_id"`
 	Title        string    `gorm:"column:title"`
@@ -21,6 +21,16 @@ type Video struct {
 	ChannelID    string    `gorm:"column:channel_id"`
 	CreatedAt    time.Time `gorm:"column:created_at"`
 	UpdatedAt    time.Time `gorm:"column:updated_at"`
+}
+
+// Exists if video exist return true
+func (v *Video) Exists() bool {
+	db := mydb.NewGormConnect()
+	defer db.Close()
+
+	result := db.First(&v, "video_id=?", v.VideoID)
+
+	return result.Error == nil
 }
 
 // Insert video
@@ -37,7 +47,7 @@ func (v *Video) Delete() {
 
 }
 
-// SetDetailInfo hoge
+// SetDetailInfo ViewCount, CommentCount, CategoryID, CategoryName
 func (v *Video) SetDetailInfo() {
 	service := NewYoutubeService()
 	call := service.Videos.List("id,snippet,Statistics").
@@ -76,7 +86,7 @@ func (v *Video) setCategoryName() {
 	v.CategoryName = item.Snippet.Title
 }
 
-// GetComments hoge
+// GetComments get comment
 func (v *Video) GetComments() []Comment {
 	service := NewYoutubeService()
 	call := service.CommentThreads.List("snippet").

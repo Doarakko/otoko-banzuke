@@ -9,7 +9,7 @@ import (
 	"google.golang.org/api/youtube/v3"
 )
 
-// NewYoutubeService hoge
+// NewYoutubeService create youtube client
 func NewYoutubeService() *youtube.Service {
 	client := &http.Client{
 		Transport: &transport.APIKey{Key: os.Getenv("YOUTUBE_API_KEY")},

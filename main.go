@@ -2,18 +2,20 @@ package main
 
 import (
 	"net/http"
+	// "log"
+
+	"github.com/gin-gonic/gin"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+	// "github.com/joho/godotenv"
 
 	banzuke "github.com/Doarakko/otoko-banzuke/internal/banzuke"
 	commend "github.com/Doarakko/otoko-banzuke/internal/commend"
 	search "github.com/Doarakko/otoko-banzuke/internal/search"
 	myyoutube "github.com/Doarakko/otoko-banzuke/pkg/youtube"
-	"github.com/gin-gonic/gin"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 func main() {
-
-	// err := godotenv.Load("../.env")
+	// err := godotenv.Load("./.env")
 	// if err != nil {
 	// 	log.Fatal("Error loading .env file")
 	// }
@@ -21,7 +23,6 @@ func main() {
 	router := gin.Default()
 	router.Static("web/static", "./web/static")
 	router.LoadHTMLFiles("web/template/index.tmpl", "web/template/commend/index.tmpl", "web/template/search/index.tmpl")
-	//router.LoadHTMLGlob("web/template/*")
 
 	// 番付
 	rankComments := banzuke.SelectRankComments()
@@ -71,7 +72,5 @@ func main() {
 		c.Redirect(302, "/search")
 	})
 
-	// local
-	// router.Run(":8080")
 	router.Run()
 }
