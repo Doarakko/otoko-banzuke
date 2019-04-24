@@ -6,7 +6,7 @@ import (
 	myyoutube "github.com/Doarakko/otoko-banzuke/pkg/youtube"
 )
 
-// SearchChannels hoge
+// SearchChannels search channels related with parameter
 func SearchChannels(q string) []myyoutube.Channel {
 	service := myyoutube.NewYoutubeService()
 	call := service.Search.List("id,snippet").
