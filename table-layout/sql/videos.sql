@@ -15,3 +15,5 @@ CREATE TABLE videos
 
     PRIMARY KEY (video_id)
 );
+
+CREATE INDEX idx_videos_01 ON videos (channel_id);
