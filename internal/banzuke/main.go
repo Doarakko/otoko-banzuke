@@ -7,7 +7,7 @@ import (
 	myyoutube "github.com/Doarakko/otoko-banzuke/pkg/youtube"
 )
 
-// SelectRankComments get comments
+// SelectRankComments get comments and rank based on like count
 func SelectRankComments() []myyoutube.Comment {
 	db := mydb.NewGormConnect()
 	defer db.Close()
