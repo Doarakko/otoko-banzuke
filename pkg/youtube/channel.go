@@ -1,10 +1,10 @@
 package youtube
 
 import (
+	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
+	"google.golang.org/api/youtube/v3"
 	"log"
 	"time"
-	"google.golang.org/api/youtube/v3"
-	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
 )
 
 // Channel struct
@@ -20,14 +20,14 @@ type Channel struct {
 	UpdatedAt       time.Time `gorm:"column:updated_at"`
 }
 
-// Select channel
-func (c *Channel) Select() Channel {
+// Exists if channel exist return true
+func (c *Channel) Exists() bool {
 	db := mydb.NewGormConnect()
 	defer db.Close()
 
-	db.First(&c, "channel_id=?", c.ChannelID)
+	result := db.First(&c, "channel_id=?", c.ChannelID)
 
-	return *c
+	return result.Error == nil
 }
 
 // Insert Channel
@@ -108,7 +108,7 @@ func (c *Channel) GetNewVideos() []Video {
 	for _, item := range response.Items {
 		videos = append(videos, newVideo(*item))
 	}
-	log.Printf("Get %v videos\n", len(videos))
+	log.Printf("Get %v new videos\n", len(videos))
 
 	return videos
 }
@@ -140,7 +140,7 @@ func (c *Channel) GetAllVideos(pageToken string) []Video {
 	return videos
 }
 
-func newVideo(item youtube.SearchResult) Video{
+func newVideo(item youtube.SearchResult) Video {
 	videoID := item.Id.VideoId
 	title := item.Snippet.Title
 	description := item.Snippet.Description
