@@ -6,7 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// NewGormConnect hoge
+// NewGormConnect create new gorm connection
 func NewGormConnect() *gorm.DB {
 	db, err := gorm.Open("postgres", os.Getenv("DATABASE_URL"))
 
