@@ -44,6 +44,5 @@ func InsertChannel(channelID string) {
 	channel := myyoutube.Channel{
 		ChannelID: channelID,
 	}
-	channel.SetDetailInfo()
 	channel.Insert()
 }
