@@ -13,8 +13,9 @@ func SearchOtoko(q string) []myyoutube.Comment {
 	comments := []myyoutube.Comment{}
 	q = "%" + q + "%"
 	db.Select("comments.text_display, comments.like_count, comments.video_id, comments.author_name, comments.author_url, videos.thumbnail_url").
-		Where("text_display like ?", q).
 		Joins("JOIN videos ON videos.video_id = comments.video_id").
+		Joins("JOIN channels ON channels.channel_id = comments.channel_id").
+		Where("comments.text_display like ? or channels.name like ?", q, q).
 		Order("comments.like_count desc").
 		Find(&comments)
 
