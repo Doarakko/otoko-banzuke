@@ -1,4 +1,5 @@
-CREATE TABLE channels (
+CREATE TABLE channels
+(
     channel_id text NOT NULL,
     name text NOT NULL,
     description text NOT NULL,
@@ -11,3 +12,4 @@ CREATE TABLE channels (
     PRIMARY KEY (channel_id)
 );
 
+-- ALTER TABLE channels DROP COLUMN playlist_id;
