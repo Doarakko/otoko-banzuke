@@ -7,7 +7,7 @@ import (
 	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
 )
 
-// Video gare
+// Video struct
 type Video struct {
 	VideoID      string    `gorm:"column:video_id"`
 	Title        string    `gorm:"column:title"`
@@ -37,7 +37,7 @@ func (v *Video) Delete() {
 
 }
 
-// SetDetailInfo hoge
+// SetDetailInfo ViewCount, CommentCount, CategoryID, CategoryName
 func (v *Video) SetDetailInfo() {
 	service := NewYoutubeService()
 	call := service.Videos.List("id,snippet,Statistics").
@@ -76,7 +76,7 @@ func (v *Video) setCategoryName() {
 	v.CategoryName = item.Snippet.Title
 }
 
-// GetComments hoge
+// GetComments get comment
 func (v *Video) GetComments() []Comment {
 	service := NewYoutubeService()
 	call := service.CommentThreads.List("snippet").

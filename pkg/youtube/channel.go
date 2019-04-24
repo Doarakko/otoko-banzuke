@@ -7,7 +7,7 @@ import (
 	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
 )
 
-// Channel fa
+// Channel struct
 type Channel struct {
 	ChannelID       string    `gorm:"column:channel_id"`
 	Name            string    `gorm:"column:name"`
@@ -113,7 +113,7 @@ func (c *Channel) GetNewVideos() []Video {
 	return videos
 }
 
-// GetAllVideos hoge
+// GetAllVideos get all videos
 func (c *Channel) GetAllVideos(pageToken string) []Video {
 	service := NewYoutubeService()
 	call := service.Search.List("id,snippet").
