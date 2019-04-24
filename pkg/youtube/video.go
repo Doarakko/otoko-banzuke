@@ -23,6 +23,16 @@ type Video struct {
 	UpdatedAt    time.Time `gorm:"column:updated_at"`
 }
 
+// Exists if video exist return true
+func (v *Video) Exists() bool {
+	db := mydb.NewGormConnect()
+	defer db.Close()
+
+	result := db.First(&v, "video_id=?", v.VideoID)
+
+	return result.Error == nil
+}
+
 // Insert video
 func (v *Video) Insert() {
 	db := mydb.NewGormConnect()
