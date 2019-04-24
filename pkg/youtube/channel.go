@@ -3,7 +3,7 @@ package youtube
 import (
 	"log"
 	"time"
-
+	"google.golang.org/api/youtube/v3"
 	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
 )
 
@@ -13,7 +13,6 @@ type Channel struct {
 	Name            string    `gorm:"column:name"`
 	Description     string    `gorm:"column:description"`
 	ThumbnailURL    string    `gorm:"column:thumbnail_url"`
-	PlaylistID      string    `gorm:"column:playlist_id"`
 	ViewCount       int64     `gorm:"column:view_count"`
 	VideoCount      int32     `gorm:"column:video_count"`
 	SubscriberCount int32     `gorm:"column:subscriber_count"`
@@ -66,10 +65,10 @@ func (c *Channel) deleteVideos() {
 
 }
 
-// SetDetailInfo PlaylistID, ViewCount, SubscriberCount, VideoCount
+// SetDetailInfo ViewCount, SubscriberCount, VideoCount
 func (c *Channel) SetDetailInfo() {
 	service := NewYoutubeService()
-	call := service.Channels.List("snippet,contentDetails,statistics").
+	call := service.Channels.List("snippet,statistics").
 		Id(c.ChannelID).
 		MaxResults(1)
 	response, err := call.Do()
@@ -81,7 +80,6 @@ func (c *Channel) SetDetailInfo() {
 	c.Name = item.Snippet.Title
 	c.Description = item.Snippet.Description
 	c.ThumbnailURL = item.Snippet.Thumbnails.High.Url
-	c.PlaylistID = item.ContentDetails.RelatedPlaylists.Uploads
 	c.ViewCount = int64(item.Statistics.ViewCount)
 	c.SubscriberCount = int32(item.Statistics.SubscriberCount)
 	c.VideoCount = int32(item.Statistics.VideoCount)
@@ -108,25 +106,7 @@ func (c *Channel) GetNewVideos() []Video {
 
 	videos := []Video{}
 	for _, item := range response.Items {
-		videoID := item.Id.VideoId
-		title := item.Snippet.Title
-		description := item.Snippet.Description
-		thumbnailURL := item.Snippet.Thumbnails.High.Url
-		channelID := item.Snippet.ChannelId
-		publishedAt, err := time.Parse(time.RFC3339, item.Snippet.PublishedAt)
-		if err != nil {
-			log.Fatalf("%v", err)
-		}
-
-		video := Video{
-			VideoID:      videoID,
-			Title:        title,
-			Description:  description,
-			ThumbnailURL: thumbnailURL,
-			ChannelID:    channelID,
-			PublishedAt:  publishedAt,
-		}
-		videos = append(videos, video)
+		videos = append(videos, newVideo(*item))
 	}
 	log.Printf("Get %v videos\n", len(videos))
 
@@ -136,8 +116,9 @@ func (c *Channel) GetNewVideos() []Video {
 // GetAllVideos hoge
 func (c *Channel) GetAllVideos(pageToken string) []Video {
 	service := NewYoutubeService()
-	call := service.PlaylistItems.List("id,snippet,contentDetails").
-		PlaylistId(c.PlaylistID).
+	call := service.Search.List("id,snippet").
+		Type("video").
+		ChannelId(c.ChannelID).
 		PageToken(pageToken).
 		MaxResults(50)
 	response, err := call.Do()
@@ -147,33 +128,7 @@ func (c *Channel) GetAllVideos(pageToken string) []Video {
 
 	videos := []Video{}
 	for _, item := range response.Items {
-		//
-		if item.Snippet.ResourceId.Kind != "youtube#video" {
-			log.Printf(">>>>>>>>>>>>>>>>>>>>>>>> %v", item.Snippet.ResourceId.Kind)
-			continue
-		}
-		log.Printf(">>>>>>>>>>>>>>>>>>>>>>>> %v", item.Snippet.ResourceId.Kind)
-
-		videoID := item.ContentDetails.VideoId
-		title := item.Snippet.Title
-		description := item.Snippet.Description
-		thumbnailURL := item.Snippet.Thumbnails.High.Url
-		channelID := item.Snippet.ChannelId
-		publishedAt, err := time.Parse(time.RFC3339, item.Snippet.PublishedAt)
-		if err != nil {
-			log.Fatalf("%v", err)
-		}
-
-		video := Video{
-			VideoID:      videoID,
-			Title:        title,
-			Description:  description,
-			ThumbnailURL: thumbnailURL,
-			ChannelID:    channelID,
-			PublishedAt:  publishedAt,
-		}
-
-		videos = append(videos, video)
+		videos = append(videos, newVideo(*item))
 	}
 
 	pageToken = response.NextPageToken
@@ -183,4 +138,26 @@ func (c *Channel) GetAllVideos(pageToken string) []Video {
 	log.Printf("Get %v videos\n", len(videos))
 
 	return videos
+}
+
+func newVideo(item youtube.SearchResult) Video{
+	videoID := item.Id.VideoId
+	title := item.Snippet.Title
+	description := item.Snippet.Description
+	thumbnailURL := item.Snippet.Thumbnails.High.Url
+	channelID := item.Snippet.ChannelId
+	publishedAt, err := time.Parse(time.RFC3339, item.Snippet.PublishedAt)
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+
+	video := Video{
+		VideoID:      videoID,
+		Title:        title,
+		Description:  description,
+		ThumbnailURL: thumbnailURL,
+		ChannelID:    channelID,
+		PublishedAt:  publishedAt,
+	}
+	return video
 }
