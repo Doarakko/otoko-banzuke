@@ -12,15 +12,21 @@ import (
 )
 
 func updateAllChannels() {
-
+	for _, channel := range selectAllChannels() {
+		channel.Update()
+	}
 }
 
 func updateAllVideos() {
-
+	for _, video := range selectAllVideos() {
+		video.Update()
+	}
 }
 
 func updateAllComments() {
-
+	for _, comment := range selectAllComments() {
+		comment.Update()
+	}
 }
 
 func selectAllChannels() []myyoutube.Channel {
@@ -31,6 +37,26 @@ func selectAllChannels() []myyoutube.Channel {
 	db.Find(&channels)
 
 	return channels
+}
+
+func selectAllVideos() []myyoutube.Video {
+	db := mydb.NewGormConnect()
+	defer db.Close()
+
+	videos := []myyoutube.Video{}
+	db.Find(&videos)
+
+	return videos
+}
+
+func selectAllComments() []myyoutube.Comment {
+	db := mydb.NewGormConnect()
+	defer db.Close()
+
+	comments := []myyoutube.Comment{}
+	db.Find(&comments)
+
+	return comments
 }
 
 func selectNewChannels() []myyoutube.Channel {
@@ -95,4 +121,7 @@ func main() {
 
 	searchAllOtoko()
 	searchNewOtoko()
+	//updateAllChannels()
+	//updateAllVideos()
+	//updateAllComments()
 }
