@@ -1,11 +1,11 @@
 package youtube
 
 import (
+	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
+	"google.golang.org/api/youtube/v3"
 	"log"
 	"regexp"
 	"time"
-
-	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
 )
 
 // Comment struct
@@ -76,4 +76,22 @@ var re = regexp.MustCompile("^.+(男|漢|おとこ|オトコ|女|おんな|オ�
 // CheckOtoko if otoko comment return true
 func (c *Comment) CheckOtoko() bool {
 	return re.MatchString(c.TextDisplay)
+}
+
+// Reply comment
+func (c *Comment) Reply() {
+	reply := &youtube.Comment{
+		Snippet: &youtube.CommentSnippet{
+			ParentId:     c.CommentID,
+			TextOriginal: "情報提供ありがとうございます。\n漢番付に登録しました。\n【漢番付】https://otoko-banzuke.herokuapp.com/",
+		},
+	}
+
+	service := NewYoutubeService()
+	call := service.Comments.Insert("id", reply)
+	response, err := call.Do()
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+	log.Printf("Reply to %v, from %v\n", c.CommentID, response.Id)
 }
