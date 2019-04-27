@@ -1,14 +1,14 @@
 package main
 
 import (
-	//"log"
+	"log"
 	"time"
 
 	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
 	myyoutube "github.com/Doarakko/otoko-banzuke/pkg/youtube"
 
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	//"github.com/joho/godotenv"
+	"github.com/joho/godotenv"
 )
 
 func updateAllChannels() {
@@ -65,7 +65,8 @@ func selectNewChannels() []myyoutube.Channel {
 
 	channels := []myyoutube.Channel{}
 
-	preAt := time.Now().Add(-time.Duration(24 * time.Hour))
+	preAt := time.Now().Add(-time.Duration(24) * time.Hour)
+	log.Printf("%v\n", preAt)
 	db.Where("created_at >= ?", preAt).Find(&channels)
 
 	return channels
@@ -75,6 +76,7 @@ func searchNewOtoko() {
 	for _, channel := range selectAllChannels() {
 		for _, video := range channel.GetNewVideos() {
 			if video.Exists() {
+				log.Printf("skip video: %v", video.VideoID)
 				continue
 			}
 
@@ -96,6 +98,7 @@ func searchAllOtoko() {
 	for _, channel := range selectNewChannels() {
 		for _, video := range channel.GetAllVideos("") {
 			if video.Exists() {
+				log.Printf("skip video: %v", video.VideoID)
 				continue
 			}
 
@@ -114,12 +117,12 @@ func searchAllOtoko() {
 }
 
 func main() {
-	// err := godotenv.Load("../.env")
-	// if err != nil {
-	// 	log.Fatal("Error loading .env file")
-	// }
+	err := godotenv.Load("../.env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
-	searchAllOtoko()
+	//searchAllOtoko()
 	searchNewOtoko()
 	//updateAllChannels()
 	//updateAllVideos()
