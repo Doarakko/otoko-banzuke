@@ -33,11 +33,8 @@ func SearchChannels(q string) []myyoutube.Channel {
 			ThumbnailURL: thumbnailURL,
 		}
 		channel.SetDetailInfo()
-		if(channel.Exists()){
-			channel.ExistsChannel = true
-		}else{
-			channel.ExistsChannel = false
-		}
+		channel.ExistsChannel = channel.Exists()
+
 
 		channels = append(channels, channel)
 	}
