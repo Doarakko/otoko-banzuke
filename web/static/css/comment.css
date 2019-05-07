@@ -31,7 +31,6 @@ table{
     border-collapse: collapse;
     width: 450px;
     border: 4px solid rgb(204, 204, 204);
-
     position: absolute;
     bottom: 0;
 }
