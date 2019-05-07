@@ -18,6 +18,7 @@ type Channel struct {
 	SubscriberCount int32     `gorm:"column:subscriber_count;not null"`
 	CreatedAt       time.Time `gorm:"column:created_at;not null"`
 	UpdatedAt       time.Time `gorm:"column:updated_at;not null"`
+	ExistChannel    bool      `gorm:"-"`
 }
 
 // Exists if channel exist return true
