@@ -21,6 +21,7 @@ type Comment struct {
 	CreatedAt    time.Time `gorm:"column:created_at;not null"`
 	UpdatedAt    time.Time `gorm:"column:updated_at;not null"`
 	Rank         int       `gorm:"-"`
+	Name         string    `gorm:"-"`
 	ThumbnailURL string    `gorm:"-"`
 }
 
