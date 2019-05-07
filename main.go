@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"github.com/joho/godotenv"
+	//"github.com/joho/godotenv"
 
 	rank "github.com/Doarakko/otoko-banzuke/internal/rank"
 	base "github.com/Doarakko/otoko-banzuke/internal/base"
@@ -17,10 +17,10 @@ import (
 )
 
 func main() {
-	err := godotenv.Load("./.env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	// err := godotenv.Load("./.env")
+	// if err != nil {
+	// 	log.Fatal("Error loading .env file")
+	// }
 
 	router := gin.Default()
 	router.Static("web/static", "./web/static")
