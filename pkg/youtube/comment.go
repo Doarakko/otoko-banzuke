@@ -74,8 +74,8 @@ func (c *Comment) SetDetailInfo() {
 
 var re = regexp.MustCompile("^.+(男|漢|おとこ|オトコ|女|おんな|オンナ).{0,1}$")
 
-// CheckOtoko if otoko comment return true
-func (c *Comment) CheckOtoko() bool {
+// CheckComment if otoko comment return true
+func (c *Comment) CheckComment() bool {
 	return re.MatchString(c.TextDisplay)
 }
 
