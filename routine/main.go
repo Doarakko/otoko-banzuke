@@ -82,7 +82,7 @@ func searchNewOtoko() {
 
 			createdFlag := false
 			for _, comment := range video.GetComments() {
-				if comment.CheckOtoko() {
+				if comment.CheckComment() {
 					if !createdFlag {
 						video.Insert()
 					}
@@ -104,7 +104,7 @@ func searchAllOtoko() {
 
 			createdFlag := false
 			for _, comment := range video.GetComments() {
-				if comment.CheckOtoko() {
+				if comment.CheckComment() {
 					if !createdFlag {
 						video.Insert()
 					}
