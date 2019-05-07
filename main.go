@@ -71,9 +71,6 @@ func main() {
 
 		if query != "" {
 			channels = commend.SearchChannels(query)
-			for i := range channels {
-				channels[i].SetDetailInfo()
-			}
 		} else if channelID != "" {
 			commend.InsertChannel(channelID)
 		}
