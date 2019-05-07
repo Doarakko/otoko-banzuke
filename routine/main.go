@@ -72,7 +72,8 @@ func selectNewChannels() []myyoutube.Channel {
 	return channels
 }
 
-func searchNewOtoko() {
+// Search comments from new videos
+func searchNewComments() {
 	for _, channel := range selectAllChannels() {
 		for _, video := range channel.GetNewVideos() {
 			if video.Exists() {
@@ -94,7 +95,8 @@ func searchNewOtoko() {
 	}
 }
 
-func searchAllOtoko() {
+// Search comments from all video
+func searchAllComments() {
 	for _, channel := range selectNewChannels() {
 		for _, video := range channel.GetAllVideos("") {
 			if video.Exists() {
@@ -122,8 +124,8 @@ func main() {
 	// 	log.Fatal("Error loading .env file")
 	// }
 
-	//searchAllOtoko()
-	searchNewOtoko()
+	//searchAllComments()
+	searchNewComments()
 	//updateAllChannels()
 	//updateAllVideos()
 	//updateAllComments()
