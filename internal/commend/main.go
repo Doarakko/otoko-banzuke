@@ -13,7 +13,7 @@ func SearchChannels(q string) []myyoutube.Channel {
 		Type("channel").
 		Q(q).
 		Order("relevance").
-		MaxResults(10)
+		MaxResults(9)
 	response, err := call.Do()
 	if err != nil {
 		log.Fatalf("%v", err)
@@ -32,6 +32,13 @@ func SearchChannels(q string) []myyoutube.Channel {
 			Description:  description,
 			ThumbnailURL: thumbnailURL,
 		}
+		channel.SetDetailInfo()
+		if(channel.Exists()){
+			channel.ExistChannel = true
+		}else{
+			channel.ExistChannel = false
+		}
+
 		channels = append(channels, channel)
 	}
 	log.Printf("Get %v channels\n", len(channels))
