@@ -47,18 +47,25 @@ DATABASE_URL = postgres://abcde
 $ mv .env.example .env
 ```
 
-4. Build
+4. Create table on Heroku.
+```
+$ heroku pg:psql --app <enter your heroku app name> < table/layout/sql/channels.sql
+$ heroku pg:psql --app <enter your heroku app name> < table/layout/sql/videos.sql
+$ heroku pg:psql --app <enter your heroku app name> < table/layout/sql/comments.sql
+```
+
+5. Build
 ```
 $ go build -o otoko-banzuke
 ```
 
-5. Run on local
+6. Run on local
 ```
 $ ./otoko-banzuke
 ```
 Access to `http://localhost:8080`, and commend Otoko.
 
-6. Search Otoko and insert comment
+7. Search Otoko and insert comment
 ```
 $ cd routine
 $ go run routine.go
