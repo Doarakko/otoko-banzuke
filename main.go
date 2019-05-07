@@ -13,6 +13,7 @@ import (
 	commend "github.com/Doarakko/otoko-banzuke/internal/commend"
 	search "github.com/Doarakko/otoko-banzuke/internal/search"
 	new "github.com/Doarakko/otoko-banzuke/internal/new"
+	myyoutube "github.com/Doarakko/otoko-banzuke/pkg/youtube"
 )
 
 func main() {
@@ -55,10 +56,7 @@ func main() {
 
 	// 漢を推薦する
 	// initial display
-	channels := commend.SearchChannels("ゲーム")
-	for i := range channels {
-		channels[i].SetDetailInfo()
-	}
+	channels := []myyoutube.Channel{}
 	router.GET("/commend", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "commend/index.tmpl", gin.H{
 			"totalComment": totalComment,
@@ -85,18 +83,21 @@ func main() {
 
 	// 漢を探す
 	// initial display
-	comments := search.SearchOtoko("飯")
+	comments := []myyoutube.Comment{}
+	commentCount := len(comments)
 	router.GET("/search", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "search/index.tmpl", gin.H{
 			"totalComment": totalComment,
 			"totalAuthor":  totalAuthor,
 			"comments":     comments,
+			"commentCount": commentCount,
 		})
 	})
 
 	router.POST("/search", func(c *gin.Context) {
 		query := c.PostForm("query")
-		comments = search.SearchOtoko(query)
+		comments = search.SearchComment(query)
+		commentCount = len(comments)
 
 		c.Redirect(302, "/search")
 	})
