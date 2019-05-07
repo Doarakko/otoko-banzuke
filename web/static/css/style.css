@@ -1,0 +1,73 @@
+@font-face {
+    font-family: 'KouzanMouhituFontOTF';
+    src: url(/web/static/font/KouzanMouhituFontOTF.otf);    
+}
+
+body {
+    font-family: KouzanMouhituFontOTF;
+}
+
+h1{
+    text-align: center;
+    margin-top: 28pt;
+    margin-bottom: 28px;
+    font-size: 80pt;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+/* header */
+li {
+    padding-top: 25px;
+    padding-bottom: 25px;
+    padding-left: 12px;
+    display: inline-block;
+    font-size: 30px;
+    width: (1/6) * 100%;
+}  
+
+.menu{
+    text-align: left;
+    float: left; 
+}
+
+/* GitHub Link */
+.github-corner:hover .octo-arm {
+    animation: octocat-wave 560ms ease-in-out;
+}
+
+@keyframes octocat-wave {
+
+    0%,
+    100% {
+        transform: rotate(0)
+    }
+
+    20%,
+    60% {
+        transform: rotate(-25deg)
+    }
+
+    40%,
+    80% {
+        transform: rotate(10deg)
+    }
+}
+
+@media (max-width:500px) {
+    .github-corner:hover .octo-arm {
+        animation: none
+    }
+
+    .github-corner .octo-arm {
+        animation: octocat-wave 560ms ease-in-out
+    }
+}
