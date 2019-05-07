@@ -8,11 +8,11 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/joho/godotenv"
 
-	banzuke "github.com/Doarakko/otoko-banzuke/internal/banzuke"
+	rank "github.com/Doarakko/otoko-banzuke/internal/rank"
 	base "github.com/Doarakko/otoko-banzuke/internal/base"
 	commend "github.com/Doarakko/otoko-banzuke/internal/commend"
 	search "github.com/Doarakko/otoko-banzuke/internal/search"
-	myyoutube "github.com/Doarakko/otoko-banzuke/pkg/youtube"
+	new "github.com/Doarakko/otoko-banzuke/internal/new"
 )
 
 func main() {
@@ -23,23 +23,42 @@ func main() {
 
 	router := gin.Default()
 	router.Static("web/static", "./web/static")
-	router.LoadHTMLFiles("web/template/index.tmpl", "web/template/commend/index.tmpl", "web/template/search/index.tmpl")
+	router.LoadHTMLFiles(
+		"web/template/index.tmpl", 
+		"web/template/new/index.tmpl",
+		"web/template/commend/index.tmpl", 
+		"web/template/search/index.tmpl",
+	)
 
 	totalComment := base.GetTotalComment()
 	totalAuthor := base.GetTotalAuthor()
+	rankComments := rank.SelectRankComments()
+	newComments := new.SelectNewComments()
 
 	// 番付
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{
 			"totalComment":  totalComment,
 			"totalAuthor":   totalAuthor,
-			"rankComments":  banzuke.SelectRankComments(),
-			"todayComments": banzuke.SelectTodayComments(),
+			"rankComments":  rankComments,
+		})
+	})
+
+	// 今週の漢
+	router.GET("/new", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "new/index.tmpl", gin.H{
+			"totalComment":  totalComment,
+			"totalAuthor":   totalAuthor,
+			"newComments": newComments,
 		})
 	})
 
 	// 漢を推薦する
-	channels := []myyoutube.Channel{}
+	// initial display
+	channels := commend.SearchChannels("ゲーム")
+	for i := range channels {
+		channels[i].SetDetailInfo()
+	}
 	router.GET("/commend", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "commend/index.tmpl", gin.H{
 			"totalComment": totalComment,
@@ -61,15 +80,12 @@ func main() {
 			commend.InsertChannel(channelID)
 		}
 
-		// update
-		totalComment = base.GetTotalComment()
-		totalAuthor = base.GetTotalAuthor()
-
 		c.Redirect(302, "/commend")
 	})
 
 	// 漢を探す
-	comments := []myyoutube.Comment{}
+	// initial display
+	comments := search.SearchOtoko("飯")
 	router.GET("/search", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "search/index.tmpl", gin.H{
 			"totalComment": totalComment,
@@ -80,12 +96,7 @@ func main() {
 
 	router.POST("/search", func(c *gin.Context) {
 		query := c.PostForm("query")
-
 		comments = search.SearchOtoko(query)
-
-		// update
-		totalComment = base.GetTotalComment()
-		totalAuthor = base.GetTotalAuthor()
 
 		c.Redirect(302, "/search")
 	})
