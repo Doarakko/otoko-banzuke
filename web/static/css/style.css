@@ -24,6 +24,10 @@ a {
     padding: 0px;
 }
 
+.header{
+    border: 8px solid rgb(204, 204, 204);    
+}
+
 /* header */
 li {
     padding-top: 25px;
