@@ -68,3 +68,37 @@ table td{
 .video-image{
     text-align: center;
 }
+
+img{
+      width: 450;
+      height: 300;
+}
+
+/* smartphone */
+@media only screen and (max-device-width: 480px) {
+    /* Grid */
+    .container {
+        grid-template-columns: 1fr;
+        padding-left: 40px; 
+        padding-right: 40px;
+    }
+
+    table{
+        width: 900px;
+    }
+
+    img{
+      width: 900;
+      height: 600;
+    }
+}
+
+/* tablet */
+@media only screen and (min-device-width: 480px)  and (max-device-width: 1024px) {
+    /* Grid */
+    .container {
+        grid-template-columns: 1fr 1fr;
+        padding-left: 40px; 
+        padding-right: 40px;
+    }
+}
