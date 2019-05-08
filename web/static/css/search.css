@@ -15,7 +15,7 @@
 }
 
 button, input {
-  	font-family: 'KouzanMouhituFontOTF';
+    font-family: 'KouzanMouhituFontOTF';
     src: url(/web/static/font/KouzanMouhituFontOTF.otf);
     font-size: 40px;
     border-radius: 4px;
