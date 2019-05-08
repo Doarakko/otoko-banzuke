@@ -94,3 +94,59 @@ table td{
     border:1px solid #333;
     border-radius: 4px;
 }
+
+img{
+    width: 200;
+    height: 200;
+}
+
+/* smartphone */
+@media only screen and (max-device-width: 480px) {
+    /* Grid */
+    .container {
+        grid-template-columns: 1fr;
+        padding-left: 120px; 
+        padding-right: 120px;
+    }
+
+    table{
+        width: 450px;
+    }
+
+    table th{
+        font-size: 40px;
+        padding: 14px;
+    }
+
+    table td{
+        font-size: 40px;
+    }
+
+    img{
+      width: 290;
+      height: 290;
+    }
+}
+
+/* tablet */
+@media only screen and (min-device-width: 480px)  and (max-device-width: 1024px) {
+    /* Grid */
+    .container {
+        grid-template-columns: 1fr 1fr;
+        padding-left: 40px; 
+        padding-right: 40px;
+    }
+
+    table{
+        width: 226px;
+    }
+
+    table th{
+        font-size: 26px;
+        padding: 6px;
+    }
+
+    table td{
+        font-size: 26px;
+    }
+}
