@@ -28,7 +28,15 @@
         <h1>漢番付</h1>
         <div class="container">
         {{range .rankComments}}
-            <div class="item">
+            {{ if eq .Rank 1}}
+                <div class="item gold">
+            {{ else if eq .Rank 2}}
+                <div class="item silver">
+            {{ else if eq .Rank 3}}
+                <div class="item bronze">
+            {{ else }}
+                <div class="item">
+            {{end}}
                 <div class="item-header">
                     {{.Rank}}位
                     <a href="https://www.youtube.com/channel/{{.ChannelID}}" target=”_blank”>{{.Name}}</a>
@@ -61,4 +69,3 @@
         </div>
     </body>
 </html>
-
