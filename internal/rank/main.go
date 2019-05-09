@@ -15,7 +15,7 @@ func SelectRankComments() []myyoutube.Comment {
 		Joins("JOIN videos ON videos.video_id = comments.video_id").
 		Joins("JOIN channels ON channels.channel_id = comments.channel_id").
 		Order("rank").
-		Limit(99).
+		Limit(48).
 		Find(&comments)
 
 	return comments
