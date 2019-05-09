@@ -1,10 +1,10 @@
 package youtube
 
 import (
-	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
-	"google.golang.org/api/youtube/v3"
 	"log"
 	"time"
+
+	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
 )
 
 // Channel struct
@@ -18,7 +18,7 @@ type Channel struct {
 	SubscriberCount int32     `gorm:"column:subscriber_count;not null"`
 	CreatedAt       time.Time `gorm:"column:created_at;not null"`
 	UpdatedAt       time.Time `gorm:"column:updated_at;not null"`
-	ExistsChannel    bool      `gorm:"-"`
+	ExistsChannel   bool      `gorm:"-"`
 }
 
 // Exists if channel exist return true
@@ -127,6 +127,8 @@ func (c *Channel) GetNewVideos() []Video {
 
 // GetAllVideos get all videos
 func (c *Channel) GetAllVideos(pageToken string) []Video {
+	log.Printf("Video page token is %v\n", pageToken)
+
 	service := NewYoutubeService()
 	call := service.Search.List("id,snippet").
 		Type("video").
@@ -147,29 +149,7 @@ func (c *Channel) GetAllVideos(pageToken string) []Video {
 	if pageToken != "" {
 		videos = append(videos, c.GetAllVideos(pageToken)...)
 	}
-	log.Printf("Get %v videos\n", len(videos))
+	log.Printf("Get %v videos from %v\n", len(videos), c.ChannelID)
 
 	return videos
-}
-
-func newVideo(item youtube.SearchResult) Video {
-	videoID := item.Id.VideoId
-	title := item.Snippet.Title
-	description := item.Snippet.Description
-	thumbnailURL := item.Snippet.Thumbnails.High.Url
-	channelID := item.Snippet.ChannelId
-	publishedAt, err := time.Parse(time.RFC3339, item.Snippet.PublishedAt)
-	if err != nil {
-		log.Fatalf("%v", err)
-	}
-
-	video := Video{
-		VideoID:      videoID,
-		Title:        title,
-		Description:  description,
-		ThumbnailURL: thumbnailURL,
-		ChannelID:    channelID,
-		PublishedAt:  publishedAt,
-	}
-	return video
 }

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
+	"google.golang.org/api/youtube/v3"
 )
 
 // Video struct
@@ -140,7 +141,29 @@ func (v *Video) GetComments() []Comment {
 		}
 		comments = append(comments, comment)
 	}
-	log.Printf("Get %v comments\n", len(comments))
+	log.Printf("Get %v comments from %v\n", len(comments), v.VideoID)
 
 	return comments
+}
+
+func newVideo(item youtube.SearchResult) Video {
+	videoID := item.Id.VideoId
+	title := item.Snippet.Title
+	description := item.Snippet.Description
+	thumbnailURL := item.Snippet.Thumbnails.High.Url
+	channelID := item.Snippet.ChannelId
+	publishedAt, err := time.Parse(time.RFC3339, item.Snippet.PublishedAt)
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+
+	video := Video{
+		VideoID:      videoID,
+		Title:        title,
+		Description:  description,
+		ThumbnailURL: thumbnailURL,
+		ChannelID:    channelID,
+		PublishedAt:  publishedAt,
+	}
+	return video
 }
