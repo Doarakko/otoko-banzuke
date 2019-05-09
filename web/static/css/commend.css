@@ -109,6 +109,11 @@ img{
         padding-right: 120px;
     }
 
+    /* channel information */
+    .item-header{
+        font-size: 60px;
+    }
+
     table{
         width: 450px;
     }
