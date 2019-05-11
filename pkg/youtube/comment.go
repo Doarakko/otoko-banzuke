@@ -1,11 +1,12 @@
 package youtube
 
 import (
-	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
-	"google.golang.org/api/youtube/v3"
 	"log"
 	"regexp"
 	"time"
+
+	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
+	"google.golang.org/api/youtube/v3"
 )
 
 // Comment struct
