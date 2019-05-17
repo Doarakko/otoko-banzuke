@@ -33,9 +33,7 @@
                 <input name="query" type="text" placeholder="キーワードを入力">
                 <input type="submit" value="検索" class="button"></p>
             </form>
-            {{ if eq .commentCount -1}}
-                <p>漢を探そう</p>
-            {{ else }}
+            {{ if ne .commentCount -1}}
                 <p>{{.commentCount}}人の漢を発見</p>
             {{end}}
         </div>
