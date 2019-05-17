@@ -13,3 +13,5 @@ CREATE TABLE channels
 );
 
 -- ALTER TABLE channels DROP COLUMN playlist_id;
+ALTER TABLE channels ALTER COLUMN view_count TYPE
+bigint; 

@@ -35,21 +35,32 @@ func (v *Video) Exists() bool {
 }
 
 // Insert video
-func (v *Video) Insert() {
+func (v *Video) Insert() error {
 	db := mydb.NewGormConnect()
 	defer db.Close()
 
-	v.SetDetailInfo()
+	err := v.SetDetailInfo()
+	if err != nil {
+		log.Printf("%v", err)
+		return nil
+	}
+
 	db.Create(&v)
 	log.Printf("Insert video: %v\n", v)
+
+	return nil
 }
 
 // Update video
-func (v *Video) Update() {
+func (v *Video) Update() error {
 	db := mydb.NewGormConnect()
 	defer db.Close()
 
-	v.SetDetailInfo()
+	err := v.SetDetailInfo()
+	if err != nil {
+		log.Printf("%v", err)
+		return nil
+	}
 
 	db.Model(&v).Updates(Video{
 		Title:        v.Title,
@@ -61,15 +72,22 @@ func (v *Video) Update() {
 		CategoryName: v.CategoryName,
 	})
 	log.Printf("Update video: %v\n", v.VideoID)
+
+	return nil
 }
 
 // Delete video
 func (v *Video) Delete() {
+	db := mydb.NewGormConnect()
+	defer db.Close()
 
+	db.Delete(&v)
+
+	log.Printf("Delete video: %v %v\n", v.VideoID, v.Title)
 }
 
 // SetDetailInfo ViewCount, CommentCount, CategoryID, CategoryName
-func (v *Video) SetDetailInfo() {
+func (v *Video) SetDetailInfo() error {
 	service := NewYoutubeService()
 	call := service.Videos.List("snippet,Statistics").
 		Id(v.VideoID).
@@ -77,6 +95,12 @@ func (v *Video) SetDetailInfo() {
 	response, err := call.Do()
 	if err != nil {
 		log.Fatalf("%v", err)
+	} else if len(response.Items) == 0 {
+		return youtubeError{
+			content: "video",
+			id:      v.VideoID,
+			message: "This video has been deleted",
+		}
 	}
 	item := response.Items[0]
 
@@ -92,6 +116,8 @@ func (v *Video) SetDetailInfo() {
 	if err != nil {
 		log.Fatalf("%v", err)
 	}
+
+	return nil
 }
 
 func (v *Video) setCategoryName() {
@@ -122,24 +148,7 @@ func (v *Video) GetComments() []Comment {
 
 	comments := []Comment{}
 	for _, item := range response.Items {
-		commentID := item.Snippet.TopLevelComment.Id
-		authorName := item.Snippet.TopLevelComment.Snippet.AuthorDisplayName
-		authorURL := item.Snippet.TopLevelComment.Snippet.AuthorChannelUrl
-		textDisplay := item.Snippet.TopLevelComment.Snippet.TextDisplay
-		likeCount := int32(item.Snippet.TopLevelComment.Snippet.LikeCount)
-		replyCount := int32(item.Snippet.TotalReplyCount)
-
-		comment := Comment{
-			CommentID:   commentID,
-			VideoID:     v.VideoID,
-			ChannelID:   v.ChannelID,
-			TextDisplay: textDisplay,
-			AuthorName:  authorName,
-			AuthorURL:   authorURL,
-			LikeCount:   likeCount,
-			ReplyCount:  replyCount,
-		}
-		comments = append(comments, comment)
+		comments = append(comments, newComment(*item))
 	}
 	log.Printf("Get %v comments from %v\n", len(comments), v.VideoID)
 

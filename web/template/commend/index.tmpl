@@ -41,7 +41,7 @@
                         <a href="https://www.youtube.com/channel/{{.ChannelID}}" target=”_blank”>{{.Name}}</a>
                          {{if not .ExistsChannel}}
                             <input type='hidden' name='channel_id' value={{.ChannelID}}>
-                            <input type="submit" value="推薦"  onClick="alert('{{.Name}} を推薦しました');" class="commend-button">
+                            <input type="submit" value="推薦"  onClick="return confirm('{{.Name}} を推薦します');" class="commend-button">
                         {{end}}
                     </form>
                 </div>

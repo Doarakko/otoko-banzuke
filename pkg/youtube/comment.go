@@ -36,27 +36,37 @@ func (c *Comment) Insert() {
 }
 
 // Update comment
-func (c *Comment) Update() {
+func (c *Comment) Update() error {
 	db := mydb.NewGormConnect()
 	defer db.Close()
 
-	c.SetDetailInfo()
+	err := c.SetDetailInfo()
+	if err != nil {
+		log.Printf("%v", err)
+		return nil
+	}
 
 	db.Model(&c).Updates(Comment{
 		LikeCount:   c.LikeCount,
 		AuthorName:  c.AuthorName,
 		TextDisplay: c.TextDisplay,
 	})
-	log.Printf("Update comment: %v\n", c.CommentID)
+	log.Printf("Update comment: %v %v %v\n", c.CommentID, c.TextDisplay, c.LikeCount)
+	return nil
 }
 
 // Delete comment
 func (c *Comment) Delete() {
+	db := mydb.NewGormConnect()
+	defer db.Close()
 
+	db.Delete(&c)
+
+	log.Printf("Delete comment: %v %v\n", c.CommentID, c.TextDisplay)
 }
 
 // SetDetailInfo ViewCount, CommentCount, CategoryID, CategoryName
-func (c *Comment) SetDetailInfo() {
+func (c *Comment) SetDetailInfo() error {
 	service := NewYoutubeService()
 	call := service.Comments.List("id,snippet").
 		Id(c.CommentID).
@@ -65,19 +75,50 @@ func (c *Comment) SetDetailInfo() {
 	response, err := call.Do()
 	if err != nil {
 		log.Fatalf("%v", err)
+	} else if len(response.Items) == 0 {
+		return youtubeError{
+			content: "comment",
+			id:      c.CommentID,
+			message: "This comment has been deleted",
+		}
 	}
 	item := response.Items[0]
 
 	c.AuthorName = item.Snippet.AuthorDisplayName
 	c.TextDisplay = item.Snippet.TextDisplay
 	c.LikeCount = int32(item.Snippet.LikeCount)
+
+	return nil
 }
 
-var re = regexp.MustCompile("^.+(男|漢|おとこ|オトコ|女|おんな|オンナ).{0,1}$")
+var re = regexp.MustCompile("^.+(漢|漢達|男|男達|男性|男子|おとこ|オトコ|女|女達|女性|女子|おんな|オンナ)(。|\\.|~|〜|!|！|\\*|＊|w|W|♂|♀){0,1}$")
 
 // CheckComment if otoko comment return true
 func (c *Comment) CheckComment() bool {
-	return re.MatchString(c.TextDisplay)
+	return re.MatchString(c.TextDisplay) && c.LikeCount >= 5
+}
+
+func newComment(item youtube.CommentThread) Comment {
+	commentID := item.Snippet.TopLevelComment.Id
+	videoID := item.Snippet.VideoId
+	channelID := item.Snippet.ChannelId
+	authorName := item.Snippet.TopLevelComment.Snippet.AuthorDisplayName
+	authorURL := item.Snippet.TopLevelComment.Snippet.AuthorChannelUrl
+	textDisplay := item.Snippet.TopLevelComment.Snippet.TextDisplay
+	likeCount := int32(item.Snippet.TopLevelComment.Snippet.LikeCount)
+	replyCount := int32(item.Snippet.TotalReplyCount)
+
+	comment := Comment{
+		CommentID:   commentID,
+		VideoID:     videoID,
+		ChannelID:   channelID,
+		TextDisplay: textDisplay,
+		AuthorName:  authorName,
+		AuthorURL:   authorURL,
+		LikeCount:   likeCount,
+		ReplyCount:  replyCount,
+	}
+	return comment
 }
 
 // Reply comment
