@@ -90,11 +90,11 @@ func main() {
 
 If you want to search other comments, change this regular expression.
 ```
-var re = regexp.MustCompile("^.+(男|漢|おとこ|オトコ|女|おんな|オンナ).{0,1}$")
+var re = regexp.MustCompile("^.+(漢|漢達|男|男達|男性|男子|おとこ|オトコ|女|女達|女性|女子|おんな|オンナ)(。|\\.|~|〜|!|！|\\*|＊|w|W|♂|♀){0,1}$")
 
 // CheckComment if otoko comment return true
 func (c *Comment) CheckComment() bool {
-    return re.MatchString(c.TextDisplay)
+	return re.MatchString(c.TextDisplay) && c.LikeCount >= 5
 }
 ```
 
