@@ -45,11 +45,15 @@ func (c *Channel) Insert() error {
 }
 
 // Update channel
-func (c *Channel) Update() {
+func (c *Channel) Update() error {
 	db := mydb.NewGormConnect()
 	defer db.Close()
 
-	c.SetDetailInfo()
+	err := c.SetDetailInfo()
+	if err != nil {
+		log.Printf("%v", err)
+		return nil
+	}
 
 	db.Model(&c).Updates(Channel{
 		Name:            c.Name,
@@ -60,11 +64,18 @@ func (c *Channel) Update() {
 		VideoCount:      c.VideoCount,
 	})
 	log.Printf("Update channel: %v\n", c.ChannelID)
+
+	return nil
 }
 
 // Delete channel
 func (c *Channel) Delete() {
+	db := mydb.NewGormConnect()
+	defer db.Close()
 
+	db.Delete(&c)
+
+	log.Printf("Delete channel: %v %v\n", c.ChannelID, c.Name)
 }
 
 func (c *Channel) selectVideos() []Video {
@@ -78,7 +89,7 @@ func (c *Channel) selectVideos() []Video {
 }
 
 // SetDetailInfo ViewCount, SubscriberCount, VideoCount
-func (c *Channel) SetDetailInfo() {
+func (c *Channel) SetDetailInfo() error {
 	service := NewYoutubeService()
 	call := service.Channels.List("snippet,statistics").
 		Id(c.ChannelID).
@@ -86,6 +97,12 @@ func (c *Channel) SetDetailInfo() {
 	response, err := call.Do()
 	if err != nil {
 		log.Fatalf("%v", err)
+	} else if len(response.Items) == 0 {
+		return youtubeError{
+			content: "channel",
+			id:      c.ChannelID,
+			message: "This channel has been deleted",
+		}
 	}
 	item := response.Items[0]
 
@@ -95,6 +112,8 @@ func (c *Channel) SetDetailInfo() {
 	c.ViewCount = int64(item.Statistics.ViewCount)
 	c.SubscriberCount = int32(item.Statistics.SubscriberCount)
 	c.VideoCount = int32(item.Statistics.VideoCount)
+
+	return nil
 }
 
 // GetNewVideos assume to run once a day
