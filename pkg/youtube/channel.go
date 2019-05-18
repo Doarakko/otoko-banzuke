@@ -139,7 +139,7 @@ func (c *Channel) GetNewVideos() []Video {
 	for _, item := range response.Items {
 		videos = append(videos, newVideo(*item))
 	}
-	log.Printf("Get %v new videos\n", len(videos))
+	log.Printf("Get %v new videos from %v\n", len(videos), c.ChannelID)
 
 	return videos
 }
