@@ -13,12 +13,16 @@
   "repository": "http://github.com/heroku/otoko-banzuke",
   "env": {
     "YOUTUBE_API_KEY": {
-      "description": "hoge",
+      "description": "youtube data api key",
       "value": "your key"
     },
     "DATABASE_URL": {
       "description": "Postgres",
       "value": "your database url"
+    },
+    "SLACK_WEBHOOK_URL": {
+      "description": "slack webhook url",
+      "value": "your webhook url"
     }
   },
   "addons": [

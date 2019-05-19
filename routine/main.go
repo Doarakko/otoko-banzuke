@@ -5,10 +5,10 @@ import (
 	"time"
 
 	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
+	"github.com/Doarakko/otoko-banzuke/pkg/slack"
 	myyoutube "github.com/Doarakko/otoko-banzuke/pkg/youtube"
 
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	//"github.com/joho/godotenv"
 )
 
 func updateAllChannels() {
@@ -72,54 +72,54 @@ func selectNewChannels() []myyoutube.Channel {
 	return channels
 }
 
-// Search comments from new videos
+// Search and insert comments from new videos
 func searchNewComments() {
 	for _, channel := range selectAllChannels() {
 		for _, video := range channel.GetNewVideos() {
-			if video.Exists() {
-				log.Printf("skip video: %v", video.VideoID)
-				continue
-			}
-
-			createdFlag := false
-			for _, comment := range video.GetComments() {
-				if comment.CheckComment() {
-					if !createdFlag {
-						video.Insert()
-					}
-					comment.Insert()
-					createdFlag = true
-				}
-			}
+			searchVideoComments(video)
 		}
 	}
 }
 
-// Search comments from all video
+// Search and insert comments from all videos
 func searchAllComments() {
 	for _, channel := range selectNewChannels() {
 		for _, video := range channel.GetAllVideos("") {
-			if video.Exists() {
-				log.Printf("skip video: %v", video.VideoID)
-				continue
-			}
+			searchVideoComments(video)
+		}
+	}
+}
 
-			createdFlag := false
-			for _, comment := range video.GetComments() {
-				if comment.CheckComment() {
-					if !createdFlag {
-						video.Insert()
-					}
-					comment.Insert()
-					createdFlag = true
-				}
+// Search and insert comments from one video
+func searchVideoComments(video myyoutube.Video) bool {
+	if video.Exists() {
+		log.Printf("skip video: %v", video.VideoID)
+		return false
+	}
+
+	createdFlag := false
+	for _, comment := range video.GetComments() {
+		if comment.CheckComment() {
+			if !createdFlag {
+				video.Insert()
 			}
+			comment.Insert()
+			createdFlag = true
+		}
+	}
+	return true
+}
+
+func deleteComments() {
+	for _, comment := range selectAllComments() {
+		if !comment.CheckComment() {
+			comment.Delete()
 		}
 	}
 }
 
 func main() {
-	// err := godotenv.Load("../.env")
+	// err := godotenv.Load("./.env")
 	// if err != nil {
 	// 	log.Fatal("Error loading .env file")
 	// }
@@ -129,4 +129,12 @@ func main() {
 	//updateAllChannels()
 	//updateAllVideos()
 	//updateAllComments()
+	// channel := myyoutube.Channel{
+	// 	ChannelID: "UCMJiPpN_09F0aWpQrgbc_qg",
+	// }
+	// for _, video := range channel.GetAllVideos("") {
+	// 	searchVideoComments(video)
+	// }
+	// updateAllComments()
+	slack.Post("Complete daily routine")
 }

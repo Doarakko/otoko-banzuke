@@ -11,6 +11,7 @@ import (
 	new "github.com/Doarakko/otoko-banzuke/internal/new"
 	rank "github.com/Doarakko/otoko-banzuke/internal/rank"
 	search "github.com/Doarakko/otoko-banzuke/internal/search"
+	"github.com/Doarakko/otoko-banzuke/pkg/slack"
 )
 
 func main() {
@@ -60,6 +61,7 @@ func main() {
 
 		if channelID != "" {
 			commend.InsertChannel(channelID)
+			slack.Post(channelID)
 			c.Redirect(302, "/commend")
 		} else if query != "" {
 			c.HTML(http.StatusOK, "commend/index.tmpl", gin.H{

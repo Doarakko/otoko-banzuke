@@ -9,7 +9,7 @@ import (
 // SearchChannels search channels related with parameter
 func SearchChannels(q string) []myyoutube.Channel {
 	service := myyoutube.NewYoutubeService()
-	call := service.Search.List("id,snippet").
+	call := service.Search.List("snippet").
 		Type("channel").
 		Q(q).
 		Order("relevance").
@@ -21,7 +21,7 @@ func SearchChannels(q string) []myyoutube.Channel {
 
 	channels := []myyoutube.Channel{}
 	for _, item := range response.Items {
-		channelID := item.Id.ChannelId
+		channelID := item.Snippet.ChannelId
 		title := item.Snippet.Title
 		description := item.Snippet.Description
 		thumbnailURL := item.Snippet.Thumbnails.High.Url
