@@ -143,7 +143,8 @@ func (v *Video) GetComments() []Comment {
 		MaxResults(50)
 	response, err := call.Do()
 	if err != nil {
-		log.Fatalf("%v", err)
+		log.Printf("%v", err)
+		return nil
 	}
 
 	comments := []Comment{}
