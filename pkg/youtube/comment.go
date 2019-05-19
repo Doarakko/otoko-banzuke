@@ -68,7 +68,7 @@ func (c *Comment) Delete() {
 // SetDetailInfo ViewCount, CommentCount, CategoryID, CategoryName
 func (c *Comment) SetDetailInfo() error {
 	service := NewYoutubeService()
-	call := service.Comments.List("id,snippet").
+	call := service.Comments.List("snippet").
 		Id(c.CommentID).
 		TextFormat("plainText").
 		MaxResults(1)
