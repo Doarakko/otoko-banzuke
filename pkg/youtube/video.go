@@ -149,7 +149,7 @@ func (v *Video) GetComments() []Comment {
 
 	comments := []Comment{}
 	for _, item := range response.Items {
-		comments = append(comments, newComment(*item))
+		comments = append(comments, newComment(*item, v.ChannelID))
 	}
 	log.Printf("Get %v comments from %v\n", len(comments), v.VideoID)
 

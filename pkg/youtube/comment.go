@@ -65,7 +65,7 @@ func (c *Comment) Delete() {
 	log.Printf("Delete comment: %v %v\n", c.CommentID, c.TextDisplay)
 }
 
-// SetDetailInfo ViewCount, CommentCount, CategoryID, CategoryName
+// SetDetailInfo AuthorName, TextDisplay, LikeCount
 func (c *Comment) SetDetailInfo() error {
 	service := NewYoutubeService()
 	call := service.Comments.List("snippet").
@@ -98,10 +98,9 @@ func (c *Comment) CheckComment() bool {
 	return re.MatchString(c.TextDisplay) && c.LikeCount >= 5
 }
 
-func newComment(item youtube.CommentThread) Comment {
+func newComment(item youtube.CommentThread, channelID string) Comment {
 	commentID := item.Snippet.TopLevelComment.Id
 	videoID := item.Snippet.VideoId
-	channelID := item.Snippet.ChannelId
 	authorName := item.Snippet.TopLevelComment.Snippet.AuthorDisplayName
 	authorURL := item.Snippet.TopLevelComment.Snippet.AuthorChannelUrl
 	textDisplay := item.Snippet.TopLevelComment.Snippet.TextDisplay
