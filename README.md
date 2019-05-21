@@ -21,21 +21,21 @@ $ git clone https://github.com/Doarakko/otoko-banzuke
 package main
 
 import (
-    "log"
-    "github.com/joho/godotenv"
+	"log"
+	"github.com/joho/godotenv"
 
-    // omission
+	// omission
 )
 
 // omission
 
 func main() {
-    err := godotenv.Load("../.env")
-    if err != nil {
-        log.Fatal("Error loading .env file")
-    }
-    
-    // omission
+	err := godotenv.Load("../.env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	// omission
 ```
 
 3. Enter your Youtube Data API key and Heroku postgres URL
@@ -80,9 +80,9 @@ if commended channels have many video, exceeds YouTube API limit.
 So default is comment out `searchAllComments()`.
 ```
 func main() {
-    // omission
-    // searchAllComments()
-    searchNewComments()
+	// omission
+	// searchAllComments()
+	searchNewComments()
 }
 ```
 
