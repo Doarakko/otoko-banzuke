@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
+	mydb "github.com/Doarakko/otoko-banzuke/database"
 	"google.golang.org/api/youtube/v3"
 )
 

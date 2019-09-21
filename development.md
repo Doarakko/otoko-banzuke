@@ -85,7 +85,7 @@ func main() {
 }
 ```
 
-- `pkg/youtube/comment.go`
+- `youtube/comment.go`
 
 If you want to search other comments, change this regular expression.
 ```
