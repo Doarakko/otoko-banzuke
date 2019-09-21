@@ -3,7 +3,7 @@ package commend
 import (
 	"log"
 
-	myyoutube "github.com/Doarakko/otoko-banzuke/pkg/youtube"
+	myyoutube "github.com/Doarakko/otoko-banzuke/youtube"
 )
 
 // SearchChannels search channels related with parameter

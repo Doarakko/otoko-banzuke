@@ -1,7 +1,7 @@
 package base
 
 import (
-	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
+	mydb "github.com/Doarakko/otoko-banzuke/database"
 )
 
 // GetTotalComment hoge

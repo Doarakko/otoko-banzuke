@@ -3,8 +3,8 @@ package new
 import (
 	"time"
 
-	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
-	myyoutube "github.com/Doarakko/otoko-banzuke/pkg/youtube"
+	mydb "github.com/Doarakko/otoko-banzuke/database"
+	myyoutube "github.com/Doarakko/otoko-banzuke/youtube"
 )
 
 // SelectNewComments get new comments

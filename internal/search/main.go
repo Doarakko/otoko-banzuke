@@ -3,8 +3,8 @@ package search
 import (
 	"strings"
 
-	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
-	myyoutube "github.com/Doarakko/otoko-banzuke/pkg/youtube"
+	mydb "github.com/Doarakko/otoko-banzuke/database"
+	myyoutube "github.com/Doarakko/otoko-banzuke/youtube"
 )
 
 // SearchComment search comment related with parameter from database

@@ -1,24 +1,26 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/joho/godotenv"
 
 	base "github.com/Doarakko/otoko-banzuke/internal/base"
 	commend "github.com/Doarakko/otoko-banzuke/internal/commend"
 	new "github.com/Doarakko/otoko-banzuke/internal/new"
 	rank "github.com/Doarakko/otoko-banzuke/internal/rank"
 	search "github.com/Doarakko/otoko-banzuke/internal/search"
-	"github.com/Doarakko/otoko-banzuke/pkg/slack"
+	"github.com/Doarakko/otoko-banzuke/slack"
 )
 
 func main() {
-	// err := godotenv.Load("./.env")
-	// if err != nil {
-	// 	log.Fatal("Error loading .env file")
-	// }
+	err := godotenv.Load("./.env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
 	router := gin.Default()
 	router.Static("web/static", "./web/static")

@@ -4,9 +4,9 @@ import (
 	"log"
 	"time"
 
-	mydb "github.com/Doarakko/otoko-banzuke/pkg/database"
-	"github.com/Doarakko/otoko-banzuke/pkg/slack"
-	myyoutube "github.com/Doarakko/otoko-banzuke/pkg/youtube"
+	mydb "github.com/Doarakko/otoko-banzuke/database"
+	"github.com/Doarakko/otoko-banzuke/slack"
+	myyoutube "github.com/Doarakko/otoko-banzuke/youtube"
 
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
